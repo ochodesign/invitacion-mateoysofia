@@ -25,7 +25,7 @@ function App() {
       <FadeInSection><FormConfirmacion /></FadeInSection>
       <FadeInSection><Regalos /></FadeInSection>
       <Footer />
-      <BotonWhatsappFlotante telefono="5491122334455" mensaje="¡Hola! Quiero confirmar mi asistencia a la fiesta." />
+  <BotonWhatsappFlotante telefono="541131307799" mensaje="Hola Julieta, tengo algunas dudas sobre el sitio y me gustaría consultarte." />
     </main>
   );
 }
