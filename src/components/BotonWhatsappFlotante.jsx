@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 
-const BotonWhatsappFlotante = ({ telefono = "5491131307799", mensaje = "Hola Julieta, tengo algunas dudas sobre el sitio y me gustaría consultarte." }) => {
+const BotonWhatsappFlotante = ({ telefono = "541131307799", mensaje = "Hola Julieta, tengo algunas dudas sobre el sitio y me gustaría consultarte." }) => {
   const [visible, setVisible] = useState(false);
   const [showMsg, setShowMsg] = useState(true);
   useEffect(() => {

@@ -7,6 +7,7 @@ const Hero = () => {
       className="relative w-full min-h-[90vh] flex flex-col justify-center items-center text-center bg-cover bg-center hero-bg-responsive overflow-x-hidden px-2"
     >
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
         .hero-bg-responsive {
           background-image: url('/img/bg-hero/bgherodk.webp');
         }
@@ -14,6 +15,9 @@ const Hero = () => {
           .hero-bg-responsive {
             background-image: url('/img/bg-hero/bgheromb.webp') !important;
           }
+        }
+        .font-dancing {
+          font-family: 'Dancing Script', cursive;
         }
       `}</style>
       {/* Overlay oscuro */}
@@ -66,7 +70,7 @@ function AnimatedHeroText({ tag = "h1", className = "", text = null }) {
         {/* Mobile: 3 líneas */}
         <h1
           className={
-            `block md:hidden text-4xl xs:text-5xl font-lora font-bold text-white mb-2 drop-shadow-lg flex flex-col items-center justify-center w-full max-w-full break-words ${baseClass}` +
+            `block md:hidden text-4xl xs:text-5xl font-dancing italic font-bold text-white mb-2 drop-shadow-lg flex flex-col items-center justify-center w-full max-w-full break-words ${baseClass}` +
             (className ? ` ${className}` : "")
           }
           style={{ wordBreak: "break-word", lineHeight: "1.1" }}
@@ -78,7 +82,7 @@ function AnimatedHeroText({ tag = "h1", className = "", text = null }) {
         {/* Desktop: una sola línea */}
         <h1
           className={
-            `hidden md:flex font-lora font-bold text-white mb-2 drop-shadow-lg flex-row items-center gap-4 justify-center w-full max-w-full break-words ${baseClass}` +
+            `hidden md:flex font-dancing italic font-bold text-white mb-2 drop-shadow-lg flex-row items-center gap-4 justify-center w-full max-w-full break-words ${baseClass}` +
             (className ? ` ${className}` : "")
           }
           style={{ wordBreak: "break-word", lineHeight: "1.1" }}
