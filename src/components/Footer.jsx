@@ -3,7 +3,7 @@ import React from "react";
 const Footer = () => {
   return (
     <footer className="w-full py-8 bg-primary text-white flex flex-col items-center font-lora text-base overflow-x-hidden px-2">
-      <div className="text-2xl font-bold tracking-wide mb-2">Julieta & Ariel</div>
+  <div className="text-2xl font-bold tracking-wide mb-2 font-dancing italic">Julieta & Ariel</div>
       <div className="italic text-lg text-accent max-w-2xl text-center mb-4 px-2" style={{fontFamily:'Lora,serif', textShadow:'0 1px 4px rgba(0,0,0,0.18)'}}>
         "El amor es la certeza de que, pase lo que pase, siempre elegiremos caminar juntos."
       </div>
