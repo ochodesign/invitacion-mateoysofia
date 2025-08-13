@@ -1,8 +1,8 @@
 <?php
 // Configuración de la base de datos
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'u506439444_bd_juliyariel');
-define('DB_USER', 'u506439444_juliyariel');
+define('DB_NAME', 'u506439444_bd_juliyari');
+define('DB_USER', 'u506439444_juliyari');
 define('DB_PASS', 'Julieta8a');
 
 // Configuración de CORS

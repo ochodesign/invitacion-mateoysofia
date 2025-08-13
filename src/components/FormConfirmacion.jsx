@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const FormConfirmacion = () => {
   const [formData, setFormData] = useState({
     nombre: "",
-    whatsapp: "",
+  wsp: "",
     asistira: "",
     mensaje: "",
     musica: ""
@@ -42,7 +42,7 @@ const FormConfirmacion = () => {
   const resetForm = () => {
     setFormData({
       nombre: "",
-      whatsapp: "",
+  wsp: "",
       asistira: "",
       mensaje: "",
       musica: ""
@@ -253,16 +253,16 @@ const FormConfirmacion = () => {
 
         {/* Campo WhatsApp */}
         <div>
-          <label className="font-lora text-primary-dark font-semibold text-sm mb-1 block" htmlFor="whatsapp">
+          <label className="font-lora text-primary-dark font-semibold text-sm mb-1 block" htmlFor="wsp">
             WhatsApp *
           </label>
           <input
-            id="whatsapp"
-            name="whatsapp"
+            id="wsp"
+            name="wsp"
             type="tel"
             placeholder="Ej: 11 2345 6789"
             className="w-full border border-primary rounded px-4 py-2 font-lora"
-            value={formData.whatsapp}
+            value={formData.wsp}
             onChange={handleChange}
             required
             disabled={!formData.asistira}
