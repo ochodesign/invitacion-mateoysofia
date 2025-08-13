@@ -1,0 +1,556 @@
+<?php
+// Mostrar errores para debug (quitar en producción)
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// CONFIGURACIÓN
+$db_host = 'localhost';
+$db_user = 'u506439444_juliyari';
+$db_pass = 'Julieta8a';
+$db_name = 'u506439444_bd_juliyari';
+$table   = 'confirmaciones';
+$fields  = ['id', 'nombre', 'asistencia', 'invitados', 'wsp', 'musica', 'mensaje', 'fecha'];
+$panel_password_hash = password_hash('Julieta8a', PASSWORD_DEFAULT); // Cambia 'TuContraseñaSegura' por la contraseña real
+
+session_start();
+
+// Autenticación
+if (isset($_POST['password'])) {
+    if (password_verify($_POST['password'], $panel_password_hash)) {
+        $_SESSION['panel_auth'] = true;
+    } else {
+        $error = "Contraseña incorrecta";
+    }
+}
+
+if (!isset($_SESSION['panel_auth'])):
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Protegido</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f9f9f9; }
+        .login-box { max-width: 350px; margin: 80px auto; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 2px 8px #0001; }
+        input[type=password], button { width: 100%; padding: 10px; margin: 8px 0; }
+        .error { color: red; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>Acceso al Panel</h2>
+        <?php if (!empty($error)) echo "<div class='error'>$error</div>"; ?>
+        <form method="post">
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Ingresar</button>
+        </form>
+    </div>
+</body>
+</html>
+<?php
+exit;
+endif;
+
+// Consulta segura a la base de datos
+$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+if ($conn->connect_error) {
+    die('<div style="color:red">Error de conexión: ' . htmlspecialchars($conn->connect_error) . '</div>');
+}
+$sql = "SELECT " . implode(',', $fields) . " FROM `$table` ORDER BY fecha DESC";
+$result = $conn->query($sql);
+
+// Calcular totales
+$totalConfirmados = 0;
+$totalInvitadosAdicionales = 0;
+$totalGeneral = 0;
+
+if ($result && $result->num_rows > 0) {
+    $data = [];
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+        
+        // Contar solo los que confirmaron asistencia (aceptar "sí", "si", "SI", etc.)
+        $asistencia = strtolower(trim($row['asistencia']));
+        if ($asistencia === 'sí' || $asistencia === 'si') {
+            $totalConfirmados++;
+            
+            // Contar invitados adicionales solo si hay nombres válidos
+            if (!empty($row['invitados']) && $row['invitados'] !== '[]' && $row['invitados'] !== 'null' && trim($row['invitados']) !== '') {
+                $invitadosValidos = [];
+                
+                // Limpiar el string de caracteres escapados
+                $invitadosLimpio = stripslashes($row['invitados']);
+                $invitados = json_decode($invitadosLimpio, true);
+                
+                if (is_array($invitados)) {
+                    // Es un array JSON válido
+                    foreach ($invitados as $invitado) {
+                        $invitadoLimpio = trim(stripslashes($invitado));
+                        if (!empty($invitadoLimpio) && $invitadoLimpio !== '' && $invitadoLimpio !== 'null') {
+                            $invitadosValidos[] = $invitadoLimpio;
+                        }
+                    }
+                } else {
+                    // Si no es JSON válido, intentar como texto plano
+                    $invitadosArray = explode(',', $invitadosLimpio);
+                    foreach ($invitadosArray as $invitado) {
+                        $invitadoLimpio = trim(stripslashes($invitado));
+                        // Remover corchetes y comillas si están presentes
+                        $invitadoLimpio = preg_replace('/[\[\]"\']/', '', $invitadoLimpio);
+                        if (!empty($invitadoLimpio) && $invitadoLimpio !== '' && $invitadoLimpio !== 'null') {
+                            $invitadosValidos[] = $invitadoLimpio;
+                        }
+                    }
+                }
+                
+                $totalInvitadosAdicionales += count($invitadosValidos);
+            }
+        }
+    }
+    
+    $totalGeneral = $totalConfirmados + $totalInvitadosAdicionales;
+    
+    // Recrear el result para iterar nuevamente
+    $result = (object)['num_rows' => count($data), 'data' => $data];
+} else {
+    $result = (object)['num_rows' => 0, 'data' => []];
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Datos - Julieta & Ariel</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;600&family=Lora:wght@300;400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Lora', serif; 
+            background: linear-gradient(135deg, #bec092 0%, #272b00 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stats-bar {
+            background: linear-gradient(90deg, #272b00, #C97B63);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stats-bar .count {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stats-bar .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .table-container {
+            padding: 30px;
+        }
+        
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+        
+        .confirmation-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .confirmation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .confirmation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #272b00, #C97B63);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .card-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #272b00;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .card-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-confirmed {
+            background: rgba(34, 197, 94, 0.1);
+            color: #15803d;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .status-declined {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        
+        .card-info {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #666;
+            min-width: 80px;
+            font-size: 0.9rem;
+        }
+        
+        .info-value {
+            color: #333;
+            flex: 1;
+            word-break: break-word;
+        }
+        
+        .whatsapp-link {
+            color: #25D366;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .whatsapp-link:hover {
+            text-decoration: underline;
+        }
+        
+        .card-message {
+            background: rgba(190, 192, 146, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #C97B63;
+            font-style: italic;
+            color: #555;
+            margin-top: 15px;
+        }
+        
+        .card-date {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 0.8rem;
+            color: #C97B63;
+            font-weight: 500;
+        }
+        
+        .card-number {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #272b00, #C97B63);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            font-style: italic;
+            grid-column: 1 / -1;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #C97B63, #272b00);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .header .subtitle { font-size: 1rem; }
+            .container { margin: 10px; }
+            .table-container { padding: 15px; }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 15px 0;
+            }
+            
+            .confirmation-card {
+                padding: 20px;
+            }
+            
+            .card-name {
+                font-size: 1.2rem;
+            }
+            
+            .card-date {
+                position: absolute;
+                top: 0px;
+                right: 30px;
+                font-size: 0.75rem;
+            }
+            
+            .card-number {
+                top: 0px;
+                left: 8px;
+                width: 25px;
+                height: 25px;
+                font-size: 0.8rem;
+            }
+            
+            .refresh-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 16px;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header fade-in">
+        <h1>Julieta & Ariel</h1>
+        <div class="subtitle">Panel de Confirmaciones - 29.11.2025</div>
+    </div>
+    
+    <div class="container fade-in">
+        <div class="stats-bar">
+            <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 20px;">
+                <div style="text-align: center;">
+                    <div class="count"><?= $totalConfirmados ?></div>
+                    <div class="label">Confirmados</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="count"><?= $totalInvitadosAdicionales ?></div>
+                    <div class="label">Acompañantes</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="count" style="font-size: 2.5rem; color: #FFD700;"><?= $totalGeneral ?></div>
+                    <div class="label" style="font-weight: bold;">Total Asistentes</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <div class="cards-grid">
+                <?php if ($result && $result->num_rows > 0): ?>
+                    <?php $counter = 1; ?>
+                    <?php foreach ($result->data as $row): ?>
+                        <div class="confirmation-card">
+                            <div class="card-number"><?= $counter ?></div>
+                            <div class="card-date">
+                                <?= date('d/m/Y', strtotime($row['fecha'])) ?>
+                            </div>
+                            
+                            <div class="card-header">
+                                <div class="card-name"><?= htmlspecialchars($row['nombre']) ?></div>
+                                <?php 
+                                    $asistencia = strtolower(trim($row['asistencia']));
+                                    $confirma = ($asistencia === 'sí' || $asistencia === 'si');
+                                ?>
+                                <div class="card-status <?= $confirma ? 'status-confirmed' : 'status-declined' ?>">
+                                    <?= $confirma ? 'Confirmado' : 'No asiste' ?>
+                                </div>
+                            </div>
+                            
+                            <div class="card-info">
+                                <div class="info-row">
+                                    <span class="info-label">WhatsApp:</span>
+                                    <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $row['wsp']) ?>" 
+                                       target="_blank" class="whatsapp-link info-value">
+                                        <?= htmlspecialchars($row['wsp']) ?>
+                                    </a>
+                                </div>
+                                
+                                <?php if (!empty($row['invitados']) && $row['invitados'] !== '[]' && $row['invitados'] !== 'null' && trim($row['invitados']) !== ''): ?>
+                                    <?php 
+                                    // Procesar invitados para mostrar solo nombres válidos
+                                    $invitadosValidos = [];
+                                    
+                                    // Limpiar el string de caracteres escapados
+                                    $invitadosLimpio = stripslashes($row['invitados']);
+                                    $invitados = json_decode($invitadosLimpio, true);
+                                    
+                                    if (is_array($invitados)) {
+                                        // Es un array JSON válido
+                                        foreach ($invitados as $invitado) {
+                                            $invitadoLimpio = trim(stripslashes($invitado));
+                                            if (!empty($invitadoLimpio) && $invitadoLimpio !== '' && $invitadoLimpio !== 'null') {
+                                                $invitadosValidos[] = $invitadoLimpio;
+                                            }
+                                        }
+                                    } else {
+                                        // Si no es JSON válido, intentar como texto plano
+                                        $invitadosArray = explode(',', $invitadosLimpio);
+                                        foreach ($invitadosArray as $invitado) {
+                                            $invitadoLimpio = trim(stripslashes($invitado));
+                                            // Remover corchetes y comillas si están presentes
+                                            $invitadoLimpio = preg_replace('/[\[\]"\']/', '', $invitadoLimpio);
+                                            if (!empty($invitadoLimpio) && $invitadoLimpio !== '' && $invitadoLimpio !== 'null') {
+                                                $invitadosValidos[] = $invitadoLimpio;
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                    
+                                    <?php if (!empty($invitadosValidos)): ?>
+                                <div class="info-row">
+                                    <span class="info-label">Acompañantes:</span>
+                                    <span class="info-value">
+                                        <?= htmlspecialchars(implode(', ', $invitadosValidos)) ?> (<?= count($invitadosValidos) ?>)
+                                    </span>
+                                </div>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                                
+                                <?php if (!empty($row['musica'])): ?>
+                                <div class="info-row">
+                                    <span class="info-label">Música:</span>
+                                    <span class="info-value"><?= htmlspecialchars($row['musica']) ?></span>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <?php if (!empty($row['mensaje'])): ?>
+                            <div class="card-message">
+                                "<?= htmlspecialchars($row['mensaje']) ?>"
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php $counter++; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">💌</div>
+                        <p style="font-size: 1.2rem; margin-bottom: 10px;">No hay confirmaciones registradas aún</p>
+                        <p style="color: #999;">Las confirmaciones aparecerán aquí cuando los invitados respondan</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    
+    <button class="refresh-btn" onclick="window.location.reload()">
+        🔄 Actualizar
+    </button>
+    
+    <script>
+        // Auto-refresh cada 30 segundos
+        setTimeout(() => {
+            window.location.reload();
+        }, 30000);
+    </script>
+</body>
+</html>
+<?php
+$conn->close();
+?>

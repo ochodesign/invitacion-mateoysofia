@@ -1,6 +1,15 @@
 RewriteEngine On
-RewriteBase /
-RewriteRule ^index\.html$ - [L]
+
+# Regla para redirigir /admin a admin.php
+RewriteRule ^admin$ admin.php [L]
+
+# Redirigir todas las rutas a index.html para React Router
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !\.php$
 RewriteRule . /index.html [L]
+
+# Configuración de headers para archivos estáticos
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
+    Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>

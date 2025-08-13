@@ -1,6 +1,5 @@
 <?php
 // Configuración de la base de datos
-
 $host = 'localhost';
 $user = 'u506439444_juliyari';
 $pass = 'Julieta8a';
@@ -8,10 +7,13 @@ $db = 'u506439444_bd_juliyari';
 
 $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
-    die('Error de conexión: ' . $conn->connect_error);
+    http_response_code(500);
+    echo json_encode(['error' => 'Error de conexión']);
+    exit;
 }
 
 // Recibir datos del formulario
+$id = $_POST['id'] ?? '';
 $nombre = $_POST['nombre'] ?? '';
 $asistencia = $_POST['asistencia'] ?? '';
 $wsp = $_POST['wsp'] ?? '';
@@ -19,30 +21,37 @@ $musica = $_POST['musica'] ?? '';
 $mensaje = $_POST['mensaje'] ?? '';
 $invitados = isset($_POST['invitados']) ? json_encode($_POST['invitados']) : '';
 
-// Insertar en la base de datos
-$sql = "INSERT INTO confirmaciones (nombre, asistencia, invitados, wsp, musica, mensaje, fecha) VALUES (?, ?, ?, ?, ?, ?, NOW())";
+if (!$id) {
+    http_response_code(400);
+    echo json_encode(['error' => 'ID es requerido']);
+    exit;
+}
+
+// Actualizar en la base de datos
+$sql = "UPDATE confirmaciones SET nombre = ?, asistencia = ?, wsp = ?, musica = ?, mensaje = ?, invitados = ? WHERE id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('ssssss', $nombre, $asistencia, $invitados, $wsp, $musica, $mensaje);
+$stmt->bind_param('ssssssi', $nombre, $asistencia, $wsp, $musica, $mensaje, $invitados, $id);
 
 if ($stmt->execute()) {
     // Notificar al servidor WebSocket
-    $msg = json_encode(['action' => 'add', 'data' => [
+    $msg = json_encode(['action' => 'update', 'data' => [
+        'id' => $id,
         'nombre' => $nombre,
         'asistencia' => $asistencia,
         'invitados' => json_decode($invitados),
         'wsp' => $wsp,
         'musica' => $musica,
-        'mensaje' => $mensaje,
-        'fecha' => date('Y-m-d H:i:s')
+        'mensaje' => $mensaje
     ]]);
     $socket = stream_socket_client("tcp://127.0.0.1:8080", $errno, $errstr);
     if ($socket) {
         fwrite($socket, $msg . "\n");
         fclose($socket);
     }
-    echo 'ok';
+    echo json_encode(['success' => 'Invitado actualizado correctamente']);
 } else {
-    echo 'error';
+    http_response_code(500);
+    echo json_encode(['error' => 'Error al actualizar el invitado']);
 }
 
 $stmt->close();
