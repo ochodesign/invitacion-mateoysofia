@@ -1,0 +1,11 @@
+# .htaccess para React SPA + PHP en Hostinger
+
+# Permitir acceso directo a archivos PHP en /backend
+RewriteEngine On
+RewriteCond %{REQUEST_URI} ^/backend/.*\.php$
+RewriteRule ^ - [L]
+
+# Redirigir todo lo demás a index.html (SPA)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]

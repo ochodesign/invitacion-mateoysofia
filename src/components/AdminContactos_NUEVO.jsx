@@ -6,64 +6,19 @@ function AdminContactos() {
 
   useEffect(() => {
     let mounted = true;
-    const fetchContactos = async () => {
-      console.log('=== INICIO FETCH ADMIN ===');
-      
-      // Intentar primero con el nuevo endpoint
-      try {
-        console.log('Intentando: /backend/listar_confirmaciones.php');
-        const res = await fetch('/backend/listar_confirmaciones.php', {
-          method: 'GET',
-          headers: {
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache'
+    const fetchContactos = () => {
+      fetch('/backend/listar_confirmaciones.php')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && mounted) {
+            setContactos(data.data);
           }
-        });
-        
-        console.log('Response status:', res.status, res.statusText);
-        
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        
-        const data = await res.json();
-        console.log('Data received:', data);
-        
-        if (data.success && mounted) {
-          setContactos(data.data);
-          console.log('Contactos cargados:', data.data.length);
-        } else {
-          console.error('Error en respuesta:', data.error);
-        }
-        
-        if (mounted) setLoading(false);
-        
-      } catch (error) {
-        console.error('Error en fetch:', error);
-        
-        // Fallback al endpoint original
-        try {
-          console.log('Fallback: /backend/listar_confirmaciones.php');
-          const res2 = await fetch('/backend/listar_confirmaciones.php');
-          const data2 = await res2.json();
-          console.log('Fallback data:', data2);
-          
-          if (data2.success && mounted) {
-            setContactos(data2.data);
-          }
-          
-        } catch (error2) {
-          console.error('Error en fallback:', error2);
-        }
-        
-        if (mounted) setLoading(false);
-      }
-      
-      console.log('=== FIN FETCH ADMIN ===');
+          if (mounted) setLoading(false);
+        })
+        .catch(() => mounted && setLoading(false));
     };
-    
     fetchContactos();
-    const interval = setInterval(fetchContactos, 30000); // Cada 30 segundos
+    const interval = setInterval(fetchContactos, 10000);
     return () => { mounted = false; clearInterval(interval); };
   }, []);
 
