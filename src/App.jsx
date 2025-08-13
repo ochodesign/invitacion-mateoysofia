@@ -1,6 +1,6 @@
 
 import React from "react";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Hero from "./components/Hero";
 import Countdown from "./components/Countdown";
 import InfoEvento from "./components/InfoEvento";
@@ -10,13 +10,14 @@ import Regalos from "./components/Regalos";
 import Footer from "./components/Footer";
 import BotonWhatsappFlotante from "./components/BotonWhatsappFlotante";
 import FadeInSection from "./components/FadeInSection";
+import Admin from "./pages/Admin";
 
 const EVENT_DATE = "2025-11-29T20:00:00";
 
-function App() {
+function MainPage() {
   return (
     <main>
-  <Hero />
+      <Hero />
       <div className="flex justify-center -mt-24 mb-12">
         <Countdown targetDate={EVENT_DATE} />
       </div>
@@ -25,8 +26,19 @@ function App() {
       <FadeInSection><FormConfirmacion /></FadeInSection>
       <FadeInSection><Regalos /></FadeInSection>
       <Footer />
-  <BotonWhatsappFlotante telefono="541131307799" mensaje="Hola Julieta, tengo algunas dudas sobre el sitio y me gustaría consultarte." />
+      <BotonWhatsappFlotante telefono="541131307799" mensaje="Hola Julieta, tengo algunas dudas sobre el sitio y me gustaría consultarte." />
     </main>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

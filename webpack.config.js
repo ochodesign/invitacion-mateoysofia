@@ -4,13 +4,12 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'public'),
-    filename: 'bundle.js',
-    publicPath: '/',
+    filename: 'main.js',
   },
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -26,10 +25,13 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
   devServer: {
-    static: path.join(__dirname, 'public'),
-    port: 3001,
-    hot: true,
-    open: true,
-    historyApiFallback: true,
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
+  port: 8083,
+  open: true,
+  hot: true,
+  historyApiFallback: true,
   },
+  mode: 'development',
 };

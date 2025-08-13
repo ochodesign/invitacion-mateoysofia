@@ -1,12 +1,11 @@
 <?php
 // Configuración de la base de datos
+
 $host = 'localhost';
-
+$user = 'u506439444_juliyari';
+$pass = 'Julieta8a';
 $db = 'u506439444_bd_juliyari';
-$user = 'u506439444_juliyari'; // Reemplaza por tu usuario
-$pass = 'Julieta8a'; // Contraseña actualizada
 
-// Conexión
 $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
     die('Error de conexión: ' . $conn->connect_error);
@@ -14,21 +13,21 @@ if ($conn->connect_error) {
 
 // Recibir datos del formulario
 $nombre = $_POST['nombre'] ?? '';
-$email = $_POST['email'] ?? '';
-$cantidad = $_POST['cantidad'] ?? 1;
+$asistencia = $_POST['asistencia'] ?? '';
 $wsp = $_POST['wsp'] ?? '';
 $musica = $_POST['musica'] ?? '';
 $mensaje = $_POST['mensaje'] ?? '';
+$invitados = isset($_POST['invitados']) ? json_encode($_POST['invitados']) : '';
 
 // Insertar en la base de datos
-$sql = "INSERT INTO confirmaciones (nombre, email, cantidad, wsp, musica, mensaje) VALUES (?, ?, ?, ?, ?, ?)";
+$sql = "INSERT INTO confirmaciones (nombre, asistencia, invitados, wsp, musica, mensaje, fecha) VALUES (?, ?, ?, ?, ?, ?, NOW())";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('ssisss', $nombre, $email, $cantidad, $wsp, $musica, $mensaje);
+$stmt->bind_param('ssssss', $nombre, $asistencia, $invitados, $wsp, $musica, $mensaje);
 
 if ($stmt->execute()) {
-    echo 'Confirmación guardada correctamente.';
+    echo 'ok';
 } else {
-    echo 'Error al guardar la confirmación: ' . $stmt->error;
+    echo 'error';
 }
 
 $stmt->close();
