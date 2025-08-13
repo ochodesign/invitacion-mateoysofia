@@ -1,175 +1,331 @@
 import React, { useState } from "react";
 
 const FormConfirmacion = () => {
-  // ...implementación del formulario de confirmación...
-  const [nombre, setNombre] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [asistira, setAsistira] = useState("");
-  const [mensaje, setMensaje] = useState("");
-  // const [comida, setComida] = useState("");
-  const [acompaniantes, setAcompaniantes] = useState([{ nombre: "" }]);
-  const [musica, setMusica] = useState("");
-  const [enviado, setEnviado] = useState(false);
-  const [enviando, setEnviando] = useState(false);
+  const [formData, setFormData] = useState({
+    nombre: "",
+    whatsapp: "",
+    asistira: "",
+    mensaje: "",
+    musica: ""
+  });
+  
+  const [invitados, setInvitados] = useState([]);
+  
+  const [estado, setEstado] = useState({
+    enviando: false,
+    enviado: false,
+    error: null
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleInvitadoChange = (index, value) => {
+    const nuevosInvitados = [...invitados];
+    nuevosInvitados[index].nombre = value;
+    setInvitados(nuevosInvitados);
+  };
+
+  const agregarInvitado = () => {
+    setInvitados([...invitados, { nombre: "" }]);
+  };
+
+  const eliminarInvitado = (index) => {
+    setInvitados(invitados.filter((_, i) => i !== index));
+  };
+
+  const resetForm = () => {
+    setFormData({
+      nombre: "",
+      whatsapp: "",
+      asistira: "",
+      mensaje: "",
+      musica: ""
+    });
+    setInvitados([]);
+    setEstado({
+      enviando: false,
+      enviado: false,
+      error: null
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('=== INICIO DEBUG FORMULARIO ===');
     
-    setEnviando(true);
+    // Preparar los datos incluyendo los invitados
+    const invitadosTexto = invitados
+      .filter(inv => inv.nombre.trim() !== "")
+      .map(inv => inv.nombre.trim())
+      .join(", ");
     
-    // Datos simplificados
-    const datos = {
-      nombre: nombre,
-      whatsapp: whatsapp,
-      asistira: asistira,
-      mensaje: mensaje || '',
-      musica: musica || ''
+    const datosCompletos = {
+      ...formData,
+      invitados: invitadosTexto
     };
     
-    console.log('Enviando datos:', datos);
+    console.log('🚀 Iniciando envío del formulario');
+    console.log('📊 Datos a enviar:', datosCompletos);
+    
+    setEstado({
+      enviando: true,
+      enviado: false,
+      error: null
+    });
     
     try {
-      const res = await fetch("/backend/guardar_confirmacion.php", {
-        method: "POST",
-        body: JSON.stringify(datos),
+      // Determinar la URL base según el entorno
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const backendUrl = isLocal 
+        ? 'https://julietayariel.site/backend/guardar_confirmacion.php'
+        : '/backend/guardar_confirmacion.php';
+      
+      console.log('🌐 URL del backend:', backendUrl);
+      
+      const response = await fetch(backendUrl, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        }
+        },
+        body: JSON.stringify(datosCompletos)
       });
-      console.log('Respuesta recibida:', res.status, res.statusText);
-      const responseText = await res.text();
-      console.log('Texto respuesta:', responseText);
-      if (res.ok) {
-        setEnviado(true);
-        console.log('¡Éxito! Formulario enviado');
-        // Reset del formulario después de 3 segundos
-        setTimeout(() => {
-          setEnviado(false);
-          setEnviando(false);
-        }, 3000);
-      } else {
-        console.log('Error en respuesta del servidor');
-        alert("Error al enviar la confirmación. Intenta de nuevo.");
-        setEnviando(false);
+      
+      console.log('📡 Status response:', response.status);
+      
+      const responseText = await response.text();
+      console.log('📄 Respuesta cruda del servidor:', responseText);
+      
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('❌ Error parseando JSON:', parseError);
+        console.log('📄 Contenido que no se pudo parsear:', responseText);
+        throw new Error('El servidor no devolvió un JSON válido');
       }
-    } catch (err) {
-      console.error('Error en fetch:', err);
-      alert("Error de conexión con el servidor.");
-      setEnviando(false);
+      
+      console.log('📋 Respuesta del servidor:', result);
+      
+      if (response.ok && result.success) {
+        setEstado({
+          enviando: false,
+          enviado: true,
+          error: null
+        });
+        
+        // Reiniciar formulario después de 3 segundos
+        setTimeout(() => {
+          resetForm();
+        }, 3000);
+        
+      } else {
+        const errorMessage = result.details ? 
+          `${result.error}: ${result.details}` : 
+          result.error || 'Error desconocido del servidor';
+        throw new Error(errorMessage);
+      }
+      
+    } catch (error) {
+      console.error('❌ Error:', error);
+      setEstado({
+        enviando: false,
+        enviado: false,
+        error: error.message
+      });
     }
-    console.log('=== FIN DEBUG FORMULARIO ===');
   };
 
   return (
-  <section className="w-full py-10 px-2 sm:px-4 bg-primary flex flex-col items-center overflow-x-hidden">
-  <h2 className="text-2xl md:text-3xl font-lora font-bold text-white mb-6">Confirmar Asistencia</h2>
-  <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-md bg-white/90 rounded-xl p-6 shadow-lg">
-          <label className="font-lora text-primary-dark font-semibold text-sm mb-1" htmlFor="asistira">Confirmar asistencia *</label>
+    <section className="w-full py-10 px-2 sm:px-4 bg-primary flex flex-col items-center overflow-x-hidden">
+      <h2 className="text-2xl md:text-3xl font-lora font-bold text-white mb-6">
+        Confirmar Asistencia
+      </h2>
+      
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-md bg-white/90 rounded-xl p-6 shadow-lg">
+        
+        {/* Campo Asistencia */}
+        <div>
+          <label className="font-lora text-primary-dark font-semibold text-sm mb-1 block" htmlFor="asistira">
+            ¿Asistirás al casamiento? *
+          </label>
           <select
             id="asistira"
-            className="border border-primary rounded px-4 py-2 font-lora overflow-x-hidden"
-            value={asistira}
-            onChange={(e) => setAsistira(e.target.value)}
+            name="asistira"
+            className="w-full border border-primary rounded px-4 py-2 font-lora"
+            value={formData.asistira}
+            onChange={handleChange}
             required
-            style={{maxWidth:'100%'}}
           >
-            <option value="">Seleccioná una opción</option>
+            <option value="">Selecciona una opción</option>
             <option value="si">Sí, asistiré</option>
             <option value="no">No podré asistir</option>
           </select>
-          <label className="font-lora text-primary-dark font-semibold text-sm mb-1" htmlFor="nombre">Nombre y Apellido *</label>
+        </div>
+
+        {/* Campo Nombre */}
+        <div>
+          <label className="font-lora text-primary-dark font-semibold text-sm mb-1 block" htmlFor="nombre">
+            Nombre y Apellido *
+          </label>
           <input
             id="nombre"
+            name="nombre"
             type="text"
             placeholder="Ej: Juan Pérez"
-            className="border border-primary rounded px-4 py-2 font-lora overflow-x-hidden whitespace-nowrap"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            className="w-full border border-primary rounded px-4 py-2 font-lora"
+            value={formData.nombre}
+            onChange={handleChange}
             required
-            autoComplete="name"
-            style={{maxWidth:'100%'}}
-            disabled={!asistira}
+            disabled={!formData.asistira}
           />
-          <label className="font-lora text-primary-dark font-semibold text-sm mb-1">Invitado(s)</label>
-          {acompaniantes.map((a, idx) => (
-            <div key={idx} className="flex gap-2 mb-2">
-              <input
-                type="text"
-                placeholder="Ej: hija, pareja, amigo, etc."
-                className="border border-primary rounded px-4 py-2 font-lora flex-1"
-                value={a.nombre}
-                onChange={e => {
-                  const nuevos = [...acompaniantes];
-                  nuevos[idx].nombre = e.target.value;
-                  setAcompaniantes(nuevos);
-                }}
-                disabled={!asistira}
-              />
-              {acompaniantes.length > 1 && (
-                <button type="button" className="text-red-500 font-bold px-2" onClick={() => setAcompaniantes(acompaniantes.filter((_, i) => i !== idx))} disabled={!asistira}>X</button>
-              )}
+        </div>
+
+        {/* Campo Invitados */}
+        <div>
+          <label className="font-lora text-primary-dark font-semibold text-sm mb-2 block">
+            Invitados adicionales
+          </label>
+          <p className="text-xs text-gray-600 mb-3 font-lora">
+            ¿Vienes acompañado? Agrega a tus familiares o acompañantes
+          </p>
+          
+          {invitados.length === 0 ? (
+            <div className="text-center">
+              <button
+                type="button"
+                className="bg-accent text-white px-6 py-3 rounded-lg font-lora hover:bg-accent/90 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed shadow-md"
+                onClick={agregarInvitado}
+                disabled={!formData.asistira}
+              >
+                + Agregar invitado
+              </button>
+              <p className="text-xs text-gray-500 mt-2 font-lora">
+                Solo tú asistirás? No hay problema, deja esta sección vacía
+              </p>
             </div>
-          ))}
-          <button type="button" className="bg-accent text-white px-3 py-1 rounded mb-2 font-lora" onClick={() => setAcompaniantes([...acompaniantes, { nombre: "" }])} disabled={!asistira}>
-            Agregar invitado
-          </button>
-          <label className="font-lora text-primary-dark font-semibold text-sm mb-1" htmlFor="whatsapp">WhatsApp *</label>
+          ) : (
+            <>
+              {invitados.map((invitado, index) => (
+                <div key={index} className="flex gap-2 mb-3 p-3 bg-gray-50 rounded-lg border">
+                  <div className="flex-1">
+                    <label className="text-xs font-lora text-gray-600 mb-1 block">
+                      Invitado {index + 1}:
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ej: María (esposa), Juan (hijo), Ana (hermana)..."
+                      className="w-full border border-primary rounded px-3 py-2 font-lora text-sm"
+                      value={invitado.nombre}
+                      onChange={(e) => handleInvitadoChange(index, e.target.value)}
+                      disabled={!formData.asistira}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="text-red-500 font-bold px-3 py-2 border border-red-300 rounded hover:bg-red-50 transition-colors self-end"
+                    onClick={() => eliminarInvitado(index)}
+                    disabled={!formData.asistira}
+                    title="Eliminar invitado"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              
+              <div className="flex gap-2 justify-center mt-3">
+                <button
+                  type="button"
+                  className="bg-accent text-white px-4 py-2 rounded font-lora hover:bg-accent/90 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  onClick={agregarInvitado}
+                  disabled={!formData.asistira}
+                >
+                  + Agregar otro invitado
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Campo WhatsApp */}
+        <div>
+          <label className="font-lora text-primary-dark font-semibold text-sm mb-1 block" htmlFor="whatsapp">
+            WhatsApp *
+          </label>
           <input
             id="whatsapp"
+            name="whatsapp"
             type="tel"
             placeholder="Ej: 11 2345 6789"
-            className="border border-primary rounded px-4 py-2 font-lora overflow-x-hidden whitespace-nowrap"
-            value={whatsapp}
-            onChange={e => setWhatsapp(e.target.value)}
+            className="w-full border border-primary rounded px-4 py-2 font-lora"
+            value={formData.whatsapp}
+            onChange={handleChange}
             required
-            autoComplete="tel"
-            style={{maxWidth:'100%'}}
-            disabled={!asistira}
-            pattern="[0-9\s\+\-]{8,15}"
-            title="Por favor ingresa un número de WhatsApp válido."
+            disabled={!formData.asistira}
           />
-          <label className="font-lora text-primary-dark font-semibold text-sm mb-1" htmlFor="musica">Sugerencia de música</label>
+        </div>
+
+        {/* Campo Música */}
+        <div>
+          <label className="font-lora text-primary-dark font-semibold text-sm mb-1 block" htmlFor="musica">
+            Sugerencia de música
+          </label>
           <textarea
             id="musica"
+            name="musica"
             placeholder="Ej: La Cumbita"
-            className="border border-primary rounded px-4 py-2 font-lora overflow-x-hidden"
-            value={musica}
-            onChange={(e) => setMusica(e.target.value)}
+            className="w-full border border-primary rounded px-4 py-2 font-lora"
+            value={formData.musica}
+            onChange={handleChange}
             rows={2}
-            style={{maxWidth:'100%', resize:'none'}}
-            disabled={!asistira}
+            disabled={!formData.asistira}
           />
-          <label className="font-lora text-primary-dark font-semibold text-sm mb-1" htmlFor="mensaje">Mensaje para los novios</label>
+        </div>
+
+        {/* Campo Mensaje */}
+        <div>
+          <label className="font-lora text-primary-dark font-semibold text-sm mb-1 block" htmlFor="mensaje">
+            Mensaje para los novios
+          </label>
           <textarea
             id="mensaje"
-            placeholder="(opcional)"
-            className="border border-primary rounded px-4 py-2 font-lora overflow-x-hidden"
-            value={mensaje}
-            onChange={(e) => setMensaje(e.target.value)}
-            rows={2}
-            style={{maxWidth:'100%', resize:'none'}}
-            disabled={!asistira}
+            name="mensaje"
+            placeholder="Escribe un mensaje para Julieta y Ariel (opcional)"
+            className="w-full border border-primary rounded px-4 py-2 font-lora"
+            value={formData.mensaje}
+            onChange={handleChange}
+            rows={3}
+            disabled={!formData.asistira}
           />
+        </div>
 
-          <button
-            type="submit"
-            className={`font-lora font-bold py-3 text-lg rounded-xl border-2 shadow-xl transition-all duration-200 focus:outline-none focus:ring-4 mt-2 ${
-              enviado 
-                ? 'bg-green-500 text-white border-green-600 focus:ring-green-400' 
-                : enviando
-                ? 'bg-gray-400 text-white border-gray-500 cursor-not-allowed'
-                : 'bg-primary text-white border-primary-dark hover:bg-primary-dark hover:text-accent hover:scale-105 focus:ring-primary/40'
-            }`}
-            style={{letterSpacing:'0.04em'}}
-            disabled={!asistira || enviando}
-            onClick={() => console.log('CLICK en botón enviar, asistira:', asistira)}
-          >
-            {enviado ? '✓ Mensaje enviado con éxito' : enviando ? 'Enviando...' : 'Enviar'}
-          </button>
-        </form>
+        {/* Mostrar errores */}
+        {estado.error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <strong>Error:</strong> {estado.error}
+          </div>
+        )}
+
+        {/* Botón de envío */}
+        <button
+          type="submit"
+          className={`font-lora font-bold py-3 text-lg rounded-xl border-2 shadow-xl transition-all duration-200 focus:outline-none focus:ring-4 mt-4 ${
+            estado.enviado 
+              ? 'bg-green-500 text-white border-green-600 focus:ring-green-400' 
+              : estado.enviando
+              ? 'bg-gray-400 text-white border-gray-500 cursor-not-allowed'
+              : 'bg-primary text-white border-primary-dark hover:bg-primary-dark hover:text-accent hover:scale-105 focus:ring-primary/40'
+          }`}
+          disabled={!formData.asistira || estado.enviando}
+        >
+          {estado.enviado ? '✓ ¡Confirmación enviada con éxito!' : estado.enviando ? 'Enviando...' : 'Enviar Confirmación'}
+        </button>
+        
+      </form>
     </section>
   );
 };
