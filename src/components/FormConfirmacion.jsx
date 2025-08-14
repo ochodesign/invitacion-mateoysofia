@@ -43,23 +43,29 @@ const FormConfirmacion = () => {
     formData.append('mensaje', form.mensaje);
     formData.append('invitados', JSON.stringify(form.invitados));
 
-    fetch('guardar_confirmacion.php', {
+    fetch('https://www.julietayariel.com/guardar_confirmacion.php', {
       method: 'POST',
       body: formData
     })
-      .then(res => res.text())
       .then(res => {
-        if (res.trim() === 'ok') {
-          setExito('¡Confirmación enviada!');
+        if (!res.ok) {
+          throw new Error(`Error ${res.status}: ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data.status === 'success') {
+          setExito('¡Confirmación enviada exitosamente! ✨');
           setForm({ nombre: "", invitados: [], wsp: "", musica: "", mensaje: "", asistencia: "" });
           setNuevoInvitado("");
         } else {
-          setExito('Hubo un error al enviar la confirmación.');
+          setExito(`Error: ${data.message || 'Hubo un problema al enviar la confirmación'}`);
         }
         setEnviando(false);
       })
-      .catch(() => {
-        setExito('Hubo un error al enviar la confirmación.');
+      .catch(error => {
+        console.error('Error al enviar formulario:', error);
+        setExito(`Error de conexión: ${error.message}`);
         setEnviando(false);
       });
   };
