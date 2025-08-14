@@ -50,7 +50,7 @@ const Admin = () => {
     const fetchData = async () => {
       setCargando(true);
       try {
-          const response = await fetch("https://www.julietayariel.com/ver_confirmaciones.php");
+          const response = await fetch("ver_confirmaciones.php");
         const data = await response.json();
         console.log("Datos recibidos:", data); // Log para depuración
         setDatos(data);
@@ -211,7 +211,7 @@ const Admin = () => {
 
   const saveEdit = async () => {
     try {
-      const response = await fetch('https://www.julietayariel.com/editar_invitado.php', {
+      const response = await fetch('editar_invitado.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -234,7 +234,7 @@ const Admin = () => {
         // Recargar datos desde el servidor para asegurar sincronización
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.julietayariel.com/ver_confirmaciones.php');
+            const response = await fetch('ver_confirmaciones.php');
             const data = await response.json();
             setDatos(data);
           } catch (error) {
@@ -255,7 +255,7 @@ const Admin = () => {
   const deleteInvitado = async (id, nombre) => {
     if (window.confirm(`¿Estás seguro de que quieres eliminar a ${nombre}?\n\nEsta acción no se puede deshacer.`)) {
       try {
-        const response = await fetch('https://www.julietayariel.com/eliminar_invitado.php', {
+        const response = await fetch('eliminar_invitado.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -270,7 +270,7 @@ const Admin = () => {
           // Recargar datos desde el servidor para asegurar sincronización
           const fetchData = async () => {
             try {
-              const response = await fetch('https://www.julietayariel.com/ver_confirmaciones.php');
+              const response = await fetch('ver_confirmaciones.php');
               const data = await response.json();
               setDatos(data);
             } catch (error) {

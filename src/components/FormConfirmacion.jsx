@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Heart, 
   Users, 
@@ -27,14 +27,29 @@ const FormConfirmacion = () => {
   const [enviando, setEnviando] = useState(false);
   const [exito, setExito] = useState("");
 
+  // Detectar parámetros de URL para mensajes de éxito/error del fallback
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === '1') {
+      setExito('¡Confirmación enviada exitosamente! ✨💕');
+      // Limpiar URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (urlParams.get('error')) {
+      setExito(`Error: ${decodeURIComponent(urlParams.get('error'))}`);
+      // Limpiar URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   const handleChange = e => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setEnviando(true);
+    
     const formData = new FormData();
     formData.append('nombre', form.nombre);
     formData.append('asistencia', form.asistencia);
@@ -43,31 +58,34 @@ const FormConfirmacion = () => {
     formData.append('mensaje', form.mensaje);
     formData.append('invitados', JSON.stringify(form.invitados));
 
-    fetch('https://www.julietayariel.com/guardar_confirmacion.php', {
-      method: 'POST',
-      body: formData
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`Error ${res.status}: ${res.statusText}`);
-        }
-        return res.json();
-      })
-      .then(data => {
-        if (data.status === 'success') {
-          setExito('¡Confirmación enviada exitosamente! ✨');
-          setForm({ nombre: "", invitados: [], wsp: "", musica: "", mensaje: "", asistencia: "" });
-          setNuevoInvitado("");
-        } else {
-          setExito(`Error: ${data.message || 'Hubo un problema al enviar la confirmación'}`);
-        }
-        setEnviando(false);
-      })
-      .catch(error => {
-        console.error('Error al enviar formulario:', error);
-        setExito(`Error de conexión: ${error.message}`);
-        setEnviando(false);
+    try {
+      // Usar URL relativa como funcionaba antes
+      const response = await fetch('guardar_confirmacion.php', {
+        method: 'POST',
+        body: formData
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const text = await response.text();
+      
+      // Manejar respuesta de texto plano como antes
+      if (text.trim() === 'ok') {
+        setExito('¡Confirmación enviada exitosamente! ✨💕');
+        setForm({ nombre: "", invitados: [], wsp: "", musica: "", mensaje: "", asistencia: "" });
+        setNuevoInvitado("");
+      } else {
+        setExito('Hubo un error al enviar la confirmación.');
+      }
+
+    } catch (error) {
+      console.error('Error al enviar formulario:', error);
+      setExito(`Error de conexión: ${error.message}`);
+    }
+    
+    setEnviando(false);
   };
   return (
     <section className="w-full py-16 px-4 bg-gradient-to-br from-bgSection via-base-light to-bgSection min-h-screen flex items-center justify-center">
