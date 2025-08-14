@@ -1,8 +1,20 @@
 <?php
-// Configuración de la base de datos
+// Headers CORS
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json");
+
+// Manejar solicitudes OPTIONS (preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Configuración de la base de datos para www.julietayariel.com
 $host = 'localhost';
-$user = 'u506439444_juliyari';
-$pass = 'Julieta8a';
+$user = 'u506439444_admin_jul';
+$pass = 'ochodesign2024';
 $db = 'u506439444_bd_juliyari';
 
 // Conexión a la base de datos

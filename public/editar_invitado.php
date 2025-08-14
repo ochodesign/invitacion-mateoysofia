@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Configuración de la base de datos
+// Configuración de la base de datos para www.julietayariel.com
 $host = 'localhost';
-$user = 'u506439444_juliyari';
-$pass = 'Julieta8a';
+$user = 'u506439444_admin_jul';
+$pass = 'ochodesign2024';
 $db = 'u506439444_bd_juliyari';
 
 $conn = new mysqli($host, $user, $pass, $db);
