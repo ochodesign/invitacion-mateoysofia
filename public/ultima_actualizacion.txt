@@ -1,0 +1,60 @@
+ÚLTIMA ACTUALIZACIÓN: 14/08/2025 - 12:25 PM
+
+🌐 MIGRACIÓN DE DOMINIO COMPLETADA:
+✅ NUEVO DOMINIO: www.julietayariel.com
+✅ PANEL ADMIN: www.julietayariel.com/admin
+📱 WHATSAPP MEJORADO: Formato argentino optimizado
+
+🔄 NUEVAS FUNCIONALIDADES AGREGADAS:
+✅ Panel de administración con funciones CRUD completas
+✅ Botón "Editar" en cada tarjeta de invitado
+✅ Botón "Eliminar" con confirmación de seguridad
+✅ Modal elegante para editar datos de invitados
+✅ Archivos PHP para editar_invitado.php y eliminar_invitado.php
+✅ Headers CORS configurados correctamente
+✅ Autenticación con password "Julieta8a"
+✅ Diseño responsive y consistente con el estilo del proyecto
+✅ Recarga automática de datos después de cada operación
+✅ Botón de logout centrado en el footer
+💕 FAVICON ROMÁNTICO con dos corazones en colores de la boda
+
+📁 ARCHIVOS ACTUALIZADOS:
+- main.js (330 KB) - Build de producción con React completo
+- Admin.jsx - Componente con funcionalidades CRUD
+- editar_invitado.php - Endpoint para modificar invitados
+- eliminar_invitado.php - Endpoint para eliminar invitados
+- index.html - Configurado con favicons y meta tags
+- favicon.svg - Favicon principal con dos corazones
+- favicon-16.svg - Favicon optimizado para 16x16
+- favicon.ico - Favicon compatible con navegadores antiguos
+
+🎨 CARACTERÍSTICAS DEL DISEÑO:
+- Cards elegantes con botones de acción
+- Modal de edición con todos los campos
+- Colores del proyecto: #272b00, #bec092, #C97B63
+- Tipografía Dancing Script y Lora
+- Iconos Lucide React
+- Efectos hover y transiciones suaves
+- Favicon romántico con dos corazones entrelazados
+
+� FAVICON ESPECIAL:
+- Dos corazones representando a Julieta y Ariel
+- Colores de la boda (#C97B63, #bec092, #272b00)
+- Efectos de destello y estrellas románticas
+- Compatible con todos los dispositivos
+- Meta tags optimizados para móviles
+
+�🔐 SEGURIDAD:
+- Confirmación antes de eliminar
+- Validación de datos en frontend y backend
+- Headers CORS configurados
+- Manejo de errores robusto
+
+📱 COMPATIBILIDAD:
+- Mobile responsive
+- Compatible con todos los navegadores modernos
+- Funciona en localhost y producción
+- Favicon visible en pestañas, favoritos y accesos directos
+
+🚀 LISTO PARA SUBIR AL HOSTINGER
+Todos los archivos están actualizados y sincronizados con favicon romántico incluido.

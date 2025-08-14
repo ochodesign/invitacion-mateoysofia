@@ -1,20 +1,56 @@
 import React, { useState, useEffect } from "react";
 import Modal from "../components/Modal";
-import { Heart, Sparkles, Users, Calendar, MessageSquare, Music, Phone, RefreshCw, Search, Filter, UserCheck, UserX, Crown, Flower2, MapPin, Clock } from "lucide-react";
+import { Heart, Sparkles, Users, Calendar, MessageSquare, Music, Phone, RefreshCw, Search, Filter, UserCheck, UserX, Crown, Flower2, MapPin, Clock, Lock, Eye, EyeOff, Edit, Trash2, Save, X } from "lucide-react";
 
 const Admin = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState("");
   const [datos, setDatos] = useState([]);
   const [cargando, setCargando] = useState(false);
   const [busqueda, setBusqueda] = useState("");
   const [filtroAsistencia, setFiltroAsistencia] = useState("Todos");
   const [modalData, setModalData] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editData, setEditData] = useState({});
 
-  // Fetch data from the backend
+  // Verificar si ya está autenticado al cargar
   useEffect(() => {
+    const authStatus = sessionStorage.getItem('adminAuth');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  // Función de login
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (password === "Julieta8a") {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('adminAuth', 'true');
+      setLoginError("");
+    } else {
+      setLoginError("Contraseña incorrecta");
+      setPassword("");
+    }
+  };
+
+  // Función de logout
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('adminAuth');
+    setPassword("");
+  };
+
+  // Fetch data from the backend - solo cuando esté autenticado
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    
     const fetchData = async () => {
       setCargando(true);
       try {
-  const response = await fetch("https://cyan-bat-386226.hostingersite.com/ver_confirmaciones.php");
+          const response = await fetch("https://www.julietayariel.com/ver_confirmaciones.php");
         const data = await response.json();
         console.log("Datos recibidos:", data); // Log para depuración
         setDatos(data);
@@ -24,7 +60,7 @@ const Admin = () => {
       setCargando(false);
     };
     fetchData();
-  }, []);
+  }, [isAuthenticated]);
 
   // WebSocket desactivado temporalmente para producción
   // useEffect(() => {
@@ -116,6 +152,221 @@ const Admin = () => {
   const openModal = (data) => setModalData(data);
   const closeModal = () => setModalData(null);
 
+  // Función para formatear número de WhatsApp
+  const formatWhatsAppNumber = (phoneNumber) => {
+    if (!phoneNumber) return '';
+    
+    // Limpiar el número: quitar espacios, guiones, paréntesis, y símbolos
+    let cleanNumber = phoneNumber.replace(/[\s\-\(\)\+]/g, '');
+    
+    // Si empieza con 549 (Argentina con 9), mantenerlo
+    if (cleanNumber.startsWith('549')) {
+      return cleanNumber;
+    }
+    
+    // Si empieza con 54 (Argentina sin 9), agregar el 9
+    if (cleanNumber.startsWith('54') && !cleanNumber.startsWith('549')) {
+      return '549' + cleanNumber.substring(2);
+    }
+    
+    // Si empieza con 0 (formato local argentino), convertir a internacional
+    if (cleanNumber.startsWith('0')) {
+      // Quitar el 0 inicial y agregar 549
+      return '549' + cleanNumber.substring(1);
+    }
+    
+    // Si no tiene código de país, asumir que es Argentina y agregar 549
+    if (cleanNumber.length === 10 || cleanNumber.length === 8) {
+      return '549' + cleanNumber;
+    }
+    
+    // Si ya tiene formato internacional correcto, devolverlo
+    return cleanNumber;
+  };
+
+  // Función para crear URL de WhatsApp con mensaje
+  const createWhatsAppURL = (phoneNumber, name) => {
+    const formattedNumber = formatWhatsAppNumber(phoneNumber);
+    const message = encodeURIComponent(`Hola ${name}! Te escribo desde el panel de administración de la boda de Julieta y Ariel 💕`);
+    return `https://wa.me/${formattedNumber}?text=${message}`;
+  };
+
+  // Funciones para editar invitado
+  const startEdit = (invitado) => {
+    setEditingId(invitado.id);
+    setEditData({
+      nombre: invitado.nombre,
+      wsp: invitado.wsp,
+      asistencia: invitado.asistencia,
+      musica: invitado.musica || '',
+      mensaje: invitado.mensaje || '',
+      invitados: invitado.invitados || ''
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditData({});
+  };
+
+  const saveEdit = async () => {
+    try {
+      const response = await fetch('https://www.julietayariel.com/editar_invitado.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: editingId,
+          ...editData
+        })
+      });
+
+      if (response.ok) {
+        // Actualizar datos localmente
+        setDatos(datos.map(inv => 
+          inv.id === editingId 
+            ? { ...inv, ...editData }
+            : inv
+        ));
+        cancelEdit();
+        alert('Invitado actualizado correctamente');
+        // Recargar datos desde el servidor para asegurar sincronización
+        const fetchData = async () => {
+          try {
+            const response = await fetch('https://www.julietayariel.com/ver_confirmaciones.php');
+            const data = await response.json();
+            setDatos(data);
+          } catch (error) {
+            console.error('Error al recargar datos:', error);
+          }
+        };
+        fetchData();
+      } else {
+        alert('Error al actualizar el invitado');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al actualizar el invitado');
+    }
+  };
+
+  // Función para eliminar invitado
+  const deleteInvitado = async (id, nombre) => {
+    if (window.confirm(`¿Estás seguro de que quieres eliminar a ${nombre}?\n\nEsta acción no se puede deshacer.`)) {
+      try {
+        const response = await fetch('https://www.julietayariel.com/eliminar_invitado.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id })
+        });
+
+        if (response.ok) {
+          // Remover de datos localmente
+          setDatos(datos.filter(inv => inv.id !== id));
+          alert('Invitado eliminado correctamente');
+          // Recargar datos desde el servidor para asegurar sincronización
+          const fetchData = async () => {
+            try {
+              const response = await fetch('https://www.julietayariel.com/ver_confirmaciones.php');
+              const data = await response.json();
+              setDatos(data);
+            } catch (error) {
+              console.error('Error al recargar datos:', error);
+            }
+          };
+          fetchData();
+        } else {
+          alert('Error al eliminar el invitado');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error al eliminar el invitado');
+      }
+    }
+  };
+
+  // Si no está autenticado, mostrar pantalla de login
+  if (!isAuthenticated) {
+    return (
+      <section className="min-h-screen bg-gradient-to-br from-bgSection via-white to-bgSection/30 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          {/* Decoraciones de fondo */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <Heart className="absolute top-20 left-8 w-8 h-8 text-accent/20 animate-pulse" />
+            <Sparkles className="absolute top-32 right-12 w-6 h-6 text-primary/30 animate-pulse" style={{animationDelay: '2s'}} />
+            <Flower2 className="absolute bottom-40 left-16 w-10 h-10 text-accent/15 animate-pulse" style={{animationDelay: '4s'}} />
+            <Crown className="absolute top-60 right-1/4 w-7 h-7 text-primary/20 animate-pulse" style={{animationDelay: '6s'}} />
+          </div>
+
+          {/* Formulario de login */}
+          <div className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-white/20 relative">
+            {/* Header del login */}
+            <div className="text-center mb-8">
+              <div className="flex justify-center items-center gap-3 mb-4">
+                <Heart className="w-8 h-8 text-accent animate-pulse" />
+                <Lock className="w-10 h-10 text-primary" />
+                <Heart className="w-8 h-8 text-accent animate-pulse" style={{animationDelay: '1s'}} />
+              </div>
+              <h1 className="text-3xl font-dancing text-primary mb-2">Panel de Administración</h1>
+              <p className="text-gray-600 font-lora">Julieta & Ariel - 29.11.2025</p>
+              <div className="w-20 h-1 bg-gradient-to-r from-accent to-primary mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            {/* Formulario */}
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="relative">
+                <label className="block text-sm font-medium text-gray-700 mb-2 font-lora">
+                  Contraseña de acceso
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-white/50 backdrop-blur-sm font-lora"
+                    placeholder="Ingresa la contraseña"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-primary transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+
+              {loginError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm font-lora">
+                  {loginError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-primary to-accent text-white py-3 px-6 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 font-lora flex items-center justify-center gap-2"
+              >
+                <Lock className="w-5 h-5" />
+                Acceder al Panel
+              </button>
+            </form>
+
+            {/* Footer del login */}
+            <div className="text-center mt-6 pt-6 border-t border-gray-200">
+              <p className="text-sm text-gray-500 font-lora">
+                Panel protegido - Solo administradores
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="min-h-screen bg-gradient-to-br from-bgSection via-white to-bgSection/30 p-4 relative overflow-hidden">
       {/* Decoraciones flotantes de fondo */}
@@ -129,7 +380,8 @@ const Admin = () => {
       </div>
 
       {/* Header mejorado */}
-      <div className="relative text-center mb-12">
+      <div className="relative text-center mb-12 mt-8">
+
         {/* Decoraciones superiores */}
         <div className="absolute -top-6 left-1/2 -translate-x-1/2">
           <div className="flex items-center gap-4">
@@ -358,10 +610,11 @@ const Admin = () => {
                     <Phone className="w-4 h-4 text-green-600 flex-shrink-0" />
                     <span className="text-gray-600 font-medium">WhatsApp:</span>
                     <a
-                      href={`https://wa.me/${row.wsp.replace(/\s|\+/g, "")}`}
+                      href={createWhatsAppURL(row.wsp, row.nombre)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-green-600 hover:text-green-800 hover:underline font-semibold transition-colors"
+                      title={`Enviar mensaje de WhatsApp a ${row.nombre}`}
                     >
                       {row.wsp}
                     </a>
@@ -462,6 +715,24 @@ const Admin = () => {
                     </div>
                   )}
                 </div>
+                
+                {/* Botones de acción */}
+                <div className="mt-6 pt-4 border-t border-gray-200/50 flex gap-3 justify-end">
+                  <button
+                    onClick={() => startEdit(row)}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => deleteInvitado(row.id, row.nombre)}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Eliminar
+                  </button>
+                </div>
               </div>
             </div>
           ))
@@ -521,12 +792,164 @@ const Admin = () => {
           </span>
           <Heart className="w-5 h-5 text-accent animate-pulse" style={{animationDelay: '1s'}} />
         </div>
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 mb-6">
           <Sparkles className="w-4 h-4 text-primary" />
           <span className="text-gray-600 text-sm">Panel de administración de confirmaciones</span>
           <Sparkles className="w-4 h-4 text-primary" />
         </div>
+        
+        {/* Botón de cerrar sesión en el footer */}
+        <div className="flex justify-center">
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl text-sm font-lora flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          >
+            <Lock className="w-4 h-4" />
+            Cerrar Sesión
+          </button>
+        </div>
       </div>
+      
+      {/* Modal de edición */}
+      {editingId && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Header del modal */}
+            <div className="bg-gradient-to-r from-primary to-accent p-6 rounded-t-2xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Edit className="w-6 h-6 text-white" />
+                  <h3 className="text-xl font-lora font-bold text-white">
+                    Editar Invitado
+                  </h3>
+                </div>
+                <button
+                  onClick={cancelEdit}
+                  className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Contenido del modal */}
+            <div className="p-6 space-y-6">
+              {/* Nombre */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <Users className="w-4 h-4 inline mr-2 text-primary" />
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  value={editData.nombre || ''}
+                  onChange={(e) => setEditData({...editData, nombre: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+                  placeholder="Nombre del invitado"
+                />
+              </div>
+              
+              {/* WhatsApp */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <Phone className="w-4 h-4 inline mr-2 text-green-600" />
+                  WhatsApp
+                </label>
+                <input
+                  type="text"
+                  value={editData.wsp || ''}
+                  onChange={(e) => setEditData({...editData, wsp: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+                  placeholder="+54 9 11 1234-5678"
+                />
+              </div>
+              
+              {/* Asistencia */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <UserCheck className="w-4 h-4 inline mr-2 text-primary" />
+                  Asistencia
+                </label>
+                <select
+                  value={editData.asistencia || ''}
+                  onChange={(e) => setEditData({...editData, asistencia: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+                >
+                  <option value="">Seleccionar...</option>
+                  <option value="Sí">Sí</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+              
+              {/* Música */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <Music className="w-4 h-4 inline mr-2 text-purple-600" />
+                  Música (opcional)
+                </label>
+                <textarea
+                  value={editData.musica || ''}
+                  onChange={(e) => setEditData({...editData, musica: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+                  rows="3"
+                  placeholder="Sugerencias de música..."
+                />
+              </div>
+              
+              {/* Mensaje */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <MessageSquare className="w-4 h-4 inline mr-2 text-blue-600" />
+                  Mensaje (opcional)
+                </label>
+                <textarea
+                  value={editData.mensaje || ''}
+                  onChange={(e) => setEditData({...editData, mensaje: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+                  rows="3"
+                  placeholder="Mensaje para los novios..."
+                />
+              </div>
+              
+              {/* Acompañantes */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <Users className="w-4 h-4 inline mr-2 text-accent" />
+                  Acompañantes (opcional)
+                </label>
+                <textarea
+                  value={editData.invitados || ''}
+                  onChange={(e) => setEditData({...editData, invitados: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
+                  rows="2"
+                  placeholder='["Nombre 1", "Nombre 2"] o separados por comas'
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Formato JSON recomendado o nombres separados por comas
+                </p>
+              </div>
+            </div>
+            
+            {/* Footer del modal */}
+            <div className="bg-gray-50 px-6 py-4 rounded-b-2xl flex gap-3 justify-end">
+              <button
+                onClick={cancelEdit}
+                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2"
+              >
+                <X className="w-4 h-4" />
+                Cancelar
+              </button>
+              <button
+                onClick={saveEdit}
+                className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex items-center gap-2 shadow-md hover:shadow-lg"
+              >
+                <Save className="w-4 h-4" />
+                Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
