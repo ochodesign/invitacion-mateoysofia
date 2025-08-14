@@ -1,9 +1,8 @@
 <?php
-// Configuración de la base de datos
-
+// Configuración de la base de datos para www.julietayariel.com
 $host = 'localhost';
-$user = 'u506439444_juliyari';
-$pass = 'Julieta8a';
+$user = 'u506439444_admin_jul';
+$pass = 'ochodesign2024';
 $db = 'u506439444_bd_juliyari';
 
 $conn = new mysqli($host, $user, $pass, $db);
@@ -25,21 +24,6 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param('ssssss', $nombre, $asistencia, $invitados, $wsp, $musica, $mensaje);
 
 if ($stmt->execute()) {
-    // Notificar al servidor WebSocket
-    $msg = json_encode(['action' => 'add', 'data' => [
-        'nombre' => $nombre,
-        'asistencia' => $asistencia,
-        'invitados' => json_decode($invitados),
-        'wsp' => $wsp,
-        'musica' => $musica,
-        'mensaje' => $mensaje,
-        'fecha' => date('Y-m-d H:i:s')
-    ]]);
-    $socket = stream_socket_client("tcp://127.0.0.1:8080", $errno, $errstr);
-    if ($socket) {
-        fwrite($socket, $msg . "\n");
-        fclose($socket);
-    }
     echo 'ok';
 } else {
     echo 'error';
@@ -47,4 +31,5 @@ if ($stmt->execute()) {
 
 $stmt->close();
 $conn->close();
+?>
 ?>
