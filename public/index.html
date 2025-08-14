@@ -11,15 +11,29 @@
   <meta property="og:url" content="https://cyan-bat-386226.hostingersite.com/" />
   <meta name="description" content="Nos casamos Julieta y Ariel y queremos que estés presente en nuestro gran día. ¡Confirmá tu asistencia!" />
     <link rel="icon" href="favicon.ico" />
-    <link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
-  <div id="root">
-    <!-- Contenido temporal mientras carga React -->
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif;">
-      <p>Cargando...</p>
-    </div>
-  </div>
-  <script src="/main.js"></script>
+  <div id="root"></div>
+  
+  <!-- Verificación de carga -->
+  <script>
+    console.log('=== DEBUGGING JULIETA & ARIEL ===');
+    console.log('Timestamp:', new Date().toISOString());
+    console.log('URL actual:', window.location.href);
+    console.log('Intentando cargar main.js...');
+    
+    // Verificar si main.js se carga correctamente
+    const script = document.createElement('script');
+    script.src = '/main.js?' + Date.now(); // Cache busting
+    script.onload = function() {
+      console.log('✅ main.js cargado exitosamente');
+    };
+    script.onerror = function() {
+      console.error('❌ Error cargando main.js');
+      document.getElementById('root').innerHTML = '<div style="padding: 20px; color: red; text-align: center;"><h2>Error de carga</h2><p>No se pudo cargar main.js</p><p>Timestamp: ' + new Date().toISOString() + '</p></div>';
+    };
+    document.head.appendChild(script);
+  </script>
   </body>
 </html>

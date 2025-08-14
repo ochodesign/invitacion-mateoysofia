@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "../components/Modal";
+import { Heart, Sparkles, Users, Calendar, MessageSquare, Music, Phone, RefreshCw, Search, Filter, UserCheck, UserX, Crown, Flower2, MapPin, Clock } from "lucide-react";
 
 const Admin = () => {
   const [datos, setDatos] = useState([]);
@@ -7,16 +8,6 @@ const Admin = () => {
   const [busqueda, setBusqueda] = useState("");
   const [filtroAsistencia, setFiltroAsistencia] = useState("Todos");
   const [modalData, setModalData] = useState(null);
-
-  // CSS para Dancing Script
-  useEffect(() => {
-    if (!document.querySelector('link[href*="Dancing+Script"]')) {
-      const link = document.createElement('link');
-      link.href = 'https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap';
-      link.rel = 'stylesheet';
-      document.head.appendChild(link);
-    }
-  }, []);
 
   // Fetch data from the backend
   useEffect(() => {
@@ -126,147 +117,291 @@ const Admin = () => {
   const closeModal = () => setModalData(null);
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-bgSection to-primary p-4">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-5xl font-dancing text-white mb-3 drop-shadow-lg">
-          Julieta & Ariel
-        </h1>
-        <p className="text-white text-lg font-light opacity-90">
-          Panel de Confirmaciones - 29.11.2025
-        </p>
+    <section className="min-h-screen bg-gradient-to-br from-bgSection via-white to-bgSection/30 p-4 relative overflow-hidden">
+      {/* Decoraciones flotantes de fondo */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <Heart className="absolute top-20 left-8 w-8 h-8 text-accent/20 animate-pulse hidden lg:block" />
+        <Sparkles className="absolute top-32 right-12 w-6 h-6 text-primary/30 animate-pulse hidden lg:block" style={{animationDelay: '2s'}} />
+        <Flower2 className="absolute bottom-40 left-16 w-10 h-10 text-accent/15 animate-pulse hidden lg:block" style={{animationDelay: '4s'}} />
+        <Crown className="absolute top-60 left-1/4 w-7 h-7 text-primary/20 animate-pulse hidden lg:block" style={{animationDelay: '6s'}} />
+        <Heart className="absolute bottom-32 right-8 w-6 h-6 text-accent/25 animate-pulse hidden lg:block" style={{animationDelay: '8s'}} />
+        <Sparkles className="absolute top-40 left-1/3 w-5 h-5 text-primary/25 animate-pulse hidden lg:block" style={{animationDelay: '3s'}} />
       </div>
 
-      {/* Debug Info */}
+      {/* Header mejorado */}
+      <div className="relative text-center mb-12">
+        {/* Decoraciones superiores */}
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2">
+          <div className="flex items-center gap-4">
+            <Sparkles className="w-6 h-6 text-accent animate-pulse" />
+            <Crown className="w-8 h-8 text-primary animate-pulse" style={{animationDelay: '1s'}} />
+            <Sparkles className="w-6 h-6 text-accent animate-pulse" style={{animationDelay: '2s'}} />
+          </div>
+        </div>
+        
+        <h1 className="text-4xl md:text-6xl font-lora font-bold text-primary mb-4 drop-shadow-lg">
+          Julieta & Ariel
+        </h1>
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <Users className="w-6 h-6 text-accent" />
+          <p className="text-primary text-xl font-lora font-medium">
+            Panel de Confirmaciones
+          </p>
+          <Users className="w-6 h-6 text-accent" />
+        </div>
+        
+        {/* Fecha del evento con iconos */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <Calendar className="w-5 h-5 text-primary" />
+          <span className="text-accent text-lg font-lora font-semibold">29.11.2025</span>
+          <MapPin className="w-5 h-5 text-primary" />
+        </div>
+        
+        {/* Decoración inferior */}
+        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-px bg-gradient-to-r from-transparent via-accent to-transparent"></div>
+            <Heart className="w-6 h-6 text-primary" />
+            <div className="w-12 h-px bg-gradient-to-l from-transparent via-accent to-transparent"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Debug Info mejorado */}
       {!cargando && datos.length === 0 && (
-        <div className="bg-accent/20 border border-accent text-accent px-6 py-4 rounded-xl mb-6 backdrop-blur-sm">
-          <p className="font-medium">No hay datos disponibles. Verificando conexión...</p>
-          <p className="text-sm mt-1">Estado: {datos ? "Array definido" : "Array undefined"}</p>
-          <p className="text-sm">Cantidad de registros: {datos.length}</p>
+        <div className="relative bg-gradient-to-r from-accent/10 to-primary/10 border-2 border-accent/30 text-primary px-8 py-6 rounded-2xl mb-8 backdrop-blur-sm shadow-lg">
+          <div className="absolute -top-3 left-6">
+            <Clock className="w-6 h-6 text-accent bg-white rounded-full p-1 shadow-md" />
+          </div>
+          <p className="font-lora font-semibold text-lg mb-2">Verificando conexión con el servidor...</p>
+          <div className="space-y-1 text-sm font-medium">
+            <p>Estado del array: {datos ? "✅ Definido" : "❌ Undefined"}</p>
+            <p>Cantidad de registros: <span className="text-accent">{datos.length}</span></p>
+          </div>
         </div>
       )}
 
-      {/* Metrics Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 text-center border border-white/20">
-          <p className="text-lg font-medium text-primary mb-2">Confirmados</p>
-          <p className="text-3xl font-bold text-accent">{totalConfirmados}</p>
-          <p className="text-sm text-gray-600 mt-1">Personas principales</p>
+      {/* Metrics Section mejorado */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+        <div className="relative group bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 text-center border-2 border-primary/20 hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+            <div className="bg-gradient-to-r from-accent to-primary p-3 rounded-full shadow-lg">
+              <UserCheck className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <div className="pt-4">
+            <p className="text-lg font-lora font-semibold text-primary mb-3">Confirmados</p>
+            <p className="text-4xl font-bold text-accent mb-2">{totalConfirmados}</p>
+            <p className="text-sm text-gray-600 font-medium">Personas principales</p>
+          </div>
+          {/* Decoración de hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
         </div>
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 text-center border border-white/20">
-          <p className="text-lg font-medium text-primary mb-2">Acompañantes</p>
-          <p className="text-3xl font-bold text-primary">{totalInvitadosExtra}</p>
-          <p className="text-sm text-gray-600 mt-1">Invitados adicionales</p>
+        
+        <div className="relative group bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 text-center border-2 border-primary/20 hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+            <div className="bg-gradient-to-r from-primary to-accent p-3 rounded-full shadow-lg">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <div className="pt-4">
+            <p className="text-lg font-lora font-semibold text-primary mb-3">Acompañantes</p>
+            <p className="text-4xl font-bold text-primary mb-2">{totalInvitadosExtra}</p>
+            <p className="text-sm text-gray-600 font-medium">Invitados adicionales</p>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
         </div>
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 text-center border border-white/20">
-          <p className="text-lg font-medium text-primary mb-2">Total Asistentes</p>
-          <p className="text-4xl font-bold text-accent">{totalGeneral}</p>
-          <p className="text-sm text-gray-600 mt-1">Confirmados + Acompañantes</p>
+        
+        <div className="relative group bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 text-center border-2 border-primary/20 hover:border-accent/50 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+          <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+            <div className="bg-gradient-to-r from-accent via-primary to-accent p-3 rounded-full shadow-lg">
+              <Crown className="w-6 h-6 text-white" />
+            </div>
+          </div>
+          <div className="pt-4">
+            <p className="text-lg font-lora font-semibold text-primary mb-3">Total Asistentes</p>
+            <p className="text-5xl font-bold text-accent mb-2">{totalGeneral}</p>
+            <p className="text-sm text-gray-600 font-medium">Confirmados + Acompañantes</p>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
         </div>
       </div>
 
-      {/* Search and Filter Section */}
-      <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 mb-8 border border-white/20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="busqueda" className="block text-sm font-medium text-primary mb-2">
+      {/* Search and Filter Section mejorado */}
+      <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 mb-10 border-2 border-primary/20">
+        <div className="absolute -top-4 left-8">
+          <div className="bg-gradient-to-r from-primary to-accent p-2 rounded-full shadow-lg">
+            <Search className="w-5 h-5 text-white" />
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+          <div className="space-y-3">
+            <label htmlFor="busqueda" className="flex items-center gap-2 text-base font-lora font-semibold text-primary">
+              <Search className="w-4 h-4 text-accent" />
               Buscar por nombre o teléfono
             </label>
-            <input
-              type="text"
-              id="busqueda"
-              value={busqueda}
-              onChange={handleSearch}
-              placeholder="Escribir aquí..."
-              className="w-full px-4 py-2 border border-bgSection rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                id="busqueda"
+                value={busqueda}
+                onChange={handleSearch}
+                placeholder="Escribir aquí..."
+                className="w-full px-4 py-3 pl-10 border-2 border-bgSection/50 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 font-medium"
+              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            </div>
           </div>
-          <div>
-            <label htmlFor="filtro" className="block text-sm font-medium text-primary mb-2">
+          
+          <div className="space-y-3">
+            <label htmlFor="filtro" className="flex items-center gap-2 text-base font-lora font-semibold text-primary">
+              <Filter className="w-4 h-4 text-accent" />
               Filtrar por asistencia
             </label>
-            <select
-              id="filtro"
-              value={filtroAsistencia}
-              onChange={handleFilter}
-              className="w-full px-4 py-2 border border-bgSection rounded-lg focus:ring-2 focus:ring-accent focus:border-accent"
-            >
-              <option value="Todos">Todos</option>
-              <option value="sí">Confirmados</option>
-              <option value="no">No confirmados</option>
-            </select>
+            <div className="relative">
+              <select
+                id="filtro"
+                value={filtroAsistencia}
+                onChange={handleFilter}
+                className="w-full px-4 py-3 pl-10 border-2 border-bgSection/50 rounded-xl focus:ring-2 focus:ring-accent focus:border-accent transition-all duration-300 font-medium appearance-none"
+              >
+                <option value="Todos">Todos</option>
+                <option value="sí">Confirmados</option>
+                <option value="no">No confirmados</option>
+              </select>
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Cards Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Cards Section mejorado */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {cargando ? (
-          <div className="col-span-full text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
-            <p className="text-white mt-4">Cargando confirmaciones...</p>
+          <div className="col-span-full text-center py-16">
+            <div className="relative">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent/30 border-t-accent"></div>
+              <Heart className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-accent animate-pulse" />
+            </div>
+            <p className="text-primary mt-6 font-lora text-lg">Cargando confirmaciones...</p>
+            <div className="flex items-center justify-center mt-4 gap-2">
+              <Sparkles className="w-4 h-4 text-accent animate-pulse" />
+              <span className="text-sm text-gray-600">Conectando con el servidor</span>
+              <Sparkles className="w-4 h-4 text-accent animate-pulse" style={{animationDelay: '1s'}} />
+            </div>
           </div>
         ) : filteredData.length > 0 ? (
           filteredData.map((row) => (
-            <div key={row.id} className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border border-white/20 hover:shadow-2xl transition-all duration-300 hover:scale-105">
-              <div className="flex justify-between items-start mb-4">
-                <div className="text-sm text-accent font-medium">
-                  {new Date(row.fecha).toLocaleDateString('es-ES', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                  })}
-                </div>
-                <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  (() => {
-                    const asistencia = row.asistencia?.toLowerCase().trim();
-                    return (asistencia === 'sí' || asistencia === 'si');
-                  })()
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-red-100 text-red-800'
-                }`}>
-                  {(() => {
-                    const asistencia = row.asistencia?.toLowerCase().trim();
-                    return (asistencia === 'sí' || asistencia === 'si') ? 'Confirmado' : 'No asiste';
-                  })()}
+            <div key={row.id} className="group relative bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6 border-2 border-primary/20 hover:border-accent/50 hover:shadow-2xl transition-all duration-500 hover:scale-105">
+              {/* Decoración superior */}
+              <div className="absolute -top-3 left-6">
+                <div className="bg-gradient-to-r from-accent to-primary p-2 rounded-full shadow-lg">
+                  <Calendar className="w-4 h-4 text-white" />
                 </div>
               </div>
               
-              <h3 className="text-xl font-semibold text-primary mb-3">{row.nombre}</h3>
+              {/* Decoraciones de hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <Heart className="w-5 h-5 text-accent animate-pulse" />
+              </div>
               
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center">
-                  <span className="text-gray-600 w-20">WhatsApp:</span>
-                  <a
-                    href={`https://wa.me/${row.wsp.replace(/\s|\+/g, "")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-green-600 hover:text-green-800 hover:underline"
-                  >
-                    {row.wsp}
-                  </a>
+              {/* Contenido de la tarjeta */}
+              <div className="relative z-10">
+                <div className="flex justify-between items-start mb-6 pt-2">
+                  <div className="flex items-center gap-2 text-sm text-accent font-semibold">
+                    <Clock className="w-4 h-4" />
+                    {new Date(row.fecha).toLocaleDateString('es-ES', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric'
+                    })}
+                  </div>
+                  <div className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold shadow-md ${
+                    (() => {
+                      const asistencia = row.asistencia?.toLowerCase().trim();
+                      return (asistencia === 'sí' || asistencia === 'si');
+                    })()
+                      ? 'bg-gradient-to-r from-green-100 to-green-50 text-green-800 border border-green-200' 
+                      : 'bg-gradient-to-r from-red-100 to-red-50 text-red-800 border border-red-200'
+                  }`}>
+                    {(() => {
+                      const asistencia = row.asistencia?.toLowerCase().trim();
+                      return (asistencia === 'sí' || asistencia === 'si') ? (
+                        <>
+                          <UserCheck className="w-3 h-3" />
+                          Confirmado
+                        </>
+                      ) : (
+                        <>
+                          <UserX className="w-3 h-3" />
+                          No asiste
+                        </>
+                      );
+                    })()}
+                  </div>
                 </div>
                 
-                {row.musica && (
-                  <div className="flex items-start">
-                    <span className="text-gray-600 w-20">Música:</span>
-                    <span className="text-gray-800 italic">{row.musica}</span>
-                  </div>
-                )}
+                <h3 className="text-xl font-lora font-bold text-primary mb-4 flex items-center gap-2">
+                  <Users className="w-5 h-5 text-accent" />
+                  {row.nombre}
+                </h3>
                 
-                {row.mensaje && (
-                  <div className="flex items-start">
-                    <span className="text-gray-600 w-20">Mensaje:</span>
-                    <span className="text-gray-800 flex-1">{row.mensaje}</span>
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50/50">
+                    <Phone className="w-4 h-4 text-green-600 flex-shrink-0" />
+                    <span className="text-gray-600 font-medium">WhatsApp:</span>
+                    <a
+                      href={`https://wa.me/${row.wsp.replace(/\s|\+/g, "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-600 hover:text-green-800 hover:underline font-semibold transition-colors"
+                    >
+                      {row.wsp}
+                    </a>
                   </div>
-                )}
-                
-                {row.invitados && row.invitados !== "[]" && row.invitados !== "null" && row.invitados.trim() !== '' && (() => {
-                  let invitadosValidos = [];
                   
-                  try {
-                    const invitadosArray = JSON.parse(row.invitados);
-                    if (Array.isArray(invitadosArray)) {
+                  {row.musica && (
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-purple-50/50">
+                      <Music className="w-4 h-4 text-purple-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <span className="text-gray-600 font-medium">Música:</span>
+                        <p className="text-gray-800 italic mt-1">{row.musica}</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {row.mensaje && (
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-blue-50/50">
+                      <MessageSquare className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <span className="text-gray-600 font-medium">Mensaje:</span>
+                        <p className="text-gray-800 mt-1">{row.mensaje}</p>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {row.invitados && row.invitados !== "[]" && row.invitados !== "null" && row.invitados.trim() !== '' && (() => {
+                    let invitadosValidos = [];
+                    
+                    try {
+                      const invitadosArray = JSON.parse(row.invitados);
+                      if (Array.isArray(invitadosArray)) {
+                        invitadosArray.forEach(inv => {
+                          const invitadoLimpio = inv ? inv.trim() : '';
+                          if (invitadoLimpio !== '' && invitadoLimpio !== 'null') {
+                            invitadosValidos.push(invitadoLimpio);
+                          }
+                        });
+                      }
+                    } catch (e) {
+                      const invitadosArray = row.invitados.split(',');
                       invitadosArray.forEach(inv => {
                         const invitadoLimpio = inv ? inv.trim() : '';
                         if (invitadoLimpio !== '' && invitadoLimpio !== 'null') {
@@ -274,76 +409,87 @@ const Admin = () => {
                         }
                       });
                     }
-                  } catch (e) {
-                    const invitadosArray = row.invitados.split(',');
-                    invitadosArray.forEach(inv => {
-                      const invitadoLimpio = inv ? inv.trim() : '';
-                      if (invitadoLimpio !== '' && invitadoLimpio !== 'null') {
-                        invitadosValidos.push(invitadoLimpio);
-                      }
-                    });
-                  }
-                  
-                  return invitadosValidos.length > 0;
-                })() && (
-                  <div className="flex items-start">
-                    <span className="text-gray-600 w-20">Acompañantes:</span>
-                    <span className="text-gray-800">
-                      {(() => {
-                        let invitadosValidos = [];
-                        
-                        try {
-                          // Limpiar caracteres escapados
-                          const invitadosLimpio = row.invitados.replace(/\\/g, '');
-                          const invitadosArray = JSON.parse(invitadosLimpio);
-                          if (Array.isArray(invitadosArray)) {
-                            invitadosArray.forEach(inv => {
-                              const invitadoLimpio = inv ? inv.trim() : '';
-                              if (invitadoLimpio !== '' && invitadoLimpio !== 'null') {
-                                invitadosValidos.push(invitadoLimpio);
+                    
+                    return invitadosValidos.length > 0;
+                  })() && (
+                    <div className="flex items-start gap-3 p-2 rounded-lg bg-accent/10">
+                      <Users className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
+                      <div>
+                        <span className="text-gray-600 font-medium">Acompañantes:</span>
+                        <div className="mt-1">
+                          {(() => {
+                            let invitadosValidos = [];
+                            
+                            try {
+                              // Limpiar caracteres escapados
+                              const invitadosLimpio = row.invitados.replace(/\\/g, '');
+                              const invitadosArray = JSON.parse(invitadosLimpio);
+                              if (Array.isArray(invitadosArray)) {
+                                invitadosArray.forEach(inv => {
+                                  const invitadoLimpio = inv ? inv.trim() : '';
+                                  if (invitadoLimpio !== '' && invitadoLimpio !== 'null') {
+                                    invitadosValidos.push(invitadoLimpio);
+                                  }
+                                });
                               }
-                            });
-                          }
-                        } catch (e) {
-                          // Si no es JSON, tratarlo como texto
-                          const invitadosLimpio = row.invitados.replace(/\\/g, '');
-                          const invitadosArray = invitadosLimpio.split(',');
-                          invitadosArray.forEach(inv => {
-                            let invitadoLimpio = inv ? inv.trim() : '';
-                            // Remover corchetes y comillas
-                            invitadoLimpio = invitadoLimpio.replace(/[\[\]"']/g, '');
-                            if (invitadoLimpio !== '' && invitadoLimpio !== 'null') {
-                              invitadosValidos.push(invitadoLimpio);
+                            } catch (e) {
+                              // Si no es JSON, tratarlo como texto
+                              const invitadosLimpio = row.invitados.replace(/\\/g, '');
+                              const invitadosArray = invitadosLimpio.split(',');
+                              invitadosArray.forEach(inv => {
+                                let invitadoLimpio = inv ? inv.trim() : '';
+                                // Remover corchetes y comillas
+                                invitadoLimpio = invitadoLimpio.replace(/[\[\]"']/g, '');
+                                if (invitadoLimpio !== '' && invitadoLimpio !== 'null') {
+                                  invitadosValidos.push(invitadoLimpio);
+                                }
+                              });
                             }
-                          });
-                        }
-                        
-                        return `${invitadosValidos.join(', ')} (${invitadosValidos.length})`;
-                      })()}
-                    </span>
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-200">
-                <button 
-                  onClick={() => openModal(row)}
-                  className="text-accent hover:text-primary font-medium transition-colors"
-                >
-                  Ver detalles
-                </button>
+                            
+                            return (
+                              <div className="flex flex-wrap gap-1">
+                                {invitadosValidos.map((inv, idx) => (
+                                  <span key={idx} className="inline-block bg-accent/20 text-accent px-2 py-1 rounded-md text-xs font-medium">
+                                    {inv}
+                                  </span>
+                                ))}
+                                <span className="text-accent font-bold ml-1">({invitadosValidos.length})</span>
+                              </div>
+                            );
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           ))
         ) : (
-          <div className="col-span-full text-center py-12">
-            <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-white/20">
-              <p className="text-gray-500 text-lg">No se encontraron confirmaciones.</p>
-              <p className="text-gray-400 text-sm mt-2">
-                {busqueda || filtroAsistencia !== "Todos" 
-                  ? "Intenta cambiar los filtros de búsqueda" 
-                  : "Aún no hay confirmaciones registradas"}
-              </p>
+          <div className="col-span-full text-center py-16">
+            <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-12 border-2 border-primary/20">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                <div className="bg-gradient-to-r from-primary to-accent p-3 rounded-full shadow-lg">
+                  <Search className="w-6 h-6 text-white" />
+                </div>
+              </div>
+              <div className="pt-4">
+                <p className="text-primary text-xl font-lora font-semibold mb-3">No se encontraron confirmaciones</p>
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <Heart className="w-5 h-5 text-accent" />
+                  <p className="text-gray-600 font-medium">
+                    {busqueda || filtroAsistencia !== "Todos" 
+                      ? "Intenta cambiar los filtros de búsqueda" 
+                      : "Aún no hay confirmaciones registradas"}
+                  </p>
+                  <Heart className="w-5 h-5 text-accent" />
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+                  <span className="text-sm text-gray-500">Los invitados comenzarán a confirmar pronto</span>
+                  <Sparkles className="w-4 h-4 text-primary animate-pulse" style={{animationDelay: '1s'}} />
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -351,21 +497,36 @@ const Admin = () => {
 
       {modalData && <Modal data={modalData} onClose={closeModal} />}
       
-      {/* Botón de actualización flotante */}
+      {/* Botón de actualización flotante mejorado */}
       <button
         onClick={() => window.location.reload()}
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-accent to-primary text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-110 z-50"
+        className="group fixed bottom-8 right-8 bg-gradient-to-r from-accent via-primary to-accent text-white p-4 rounded-full shadow-2xl hover:shadow-accent/25 transition-all duration-500 hover:scale-110 z-50 border-2 border-white/20"
         title="Actualizar datos"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-        </svg>
+        <div className="relative">
+          <RefreshCw className="w-6 h-6 group-hover:rotate-180 transition-transform duration-500" />
+          <div className="absolute inset-0 bg-white/20 rounded-full scale-0 group-hover:scale-100 transition-transform duration-300"></div>
+        </div>
+        <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <Sparkles className="w-4 h-4 text-white animate-pulse" />
+        </div>
       </button>
       
-      {/* Auto-refresh cada 30 segundos */}
-      <script>
-        {`setTimeout(() => window.location.reload(), 30000)`}
-      </script>
+      {/* Footer romántico */}
+      <div className="mt-16 text-center pb-8">
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <Heart className="w-5 h-5 text-accent animate-pulse" />
+          <span className="text-primary font-lora text-lg font-semibold">
+            Julieta & Ariel - 29.11.2025
+          </span>
+          <Heart className="w-5 h-5 text-accent animate-pulse" style={{animationDelay: '1s'}} />
+        </div>
+        <div className="flex items-center justify-center gap-2">
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span className="text-gray-600 text-sm">Panel de administración de confirmaciones</span>
+          <Sparkles className="w-4 h-4 text-primary" />
+        </div>
+      </div>
     </section>
   );
 };

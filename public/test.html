@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test - Julieta & Ariel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #bec092 0%, #272b00 100%);
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+    </style>
+</head>
+<body>
+    <h1>🎉 Test de Conectividad - Julieta & Ariel</h1>
+    <p>Si ves esta página, los archivos se están subiendo correctamente.</p>
+    
+    <div id="results">
+        <h3>Verificaciones:</h3>
+        <div id="main-js-test">Verificando main.js...</div>
+        <div id="route-test">Verificando rutas...</div>
+    </div>
+    
+    <script>
+        console.log('=== TEST PAGE LOADED ===');
+        
+        // Test main.js
+        fetch('/main.js')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('main-js-test').innerHTML = '<span class="success">✅ main.js disponible (Tamaño: ' + Math.round(response.headers.get('content-length')/1024) + 'KB)</span>';
+                } else {
+                    document.getElementById('main-js-test').innerHTML = '<span class="error">❌ main.js no encontrado</span>';
+                }
+            })
+            .catch(e => {
+                document.getElementById('main-js-test').innerHTML = '<span class="error">❌ Error accediendo a main.js: ' + e.message + '</span>';
+            });
+            
+        // Test rutas
+        const currentPath = window.location.pathname;
+        document.getElementById('route-test').innerHTML = '<span class="success">✅ Ruta actual: ' + currentPath + '</span>';
+        
+        // Información adicional
+        setTimeout(() => {
+            const info = document.createElement('div');
+            info.innerHTML = `
+                <h3>Información del servidor:</h3>
+                <p><strong>URL:</strong> ${window.location.href}</p>
+                <p><strong>User Agent:</strong> ${navigator.userAgent.substring(0, 100)}...</p>
+                <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+            `;
+            document.getElementById('results').appendChild(info);
+        }, 1000);
+    </script>
+</body>
+</html>

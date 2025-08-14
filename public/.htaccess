@@ -1,15 +1,32 @@
 RewriteEngine On
 
-# Regla para redirigir /admin a admin.php
-RewriteRule ^admin$ admin.php [L]
+# Configuración específica para Hostinger
+Options -MultiViews
 
-# Redirigir todas las rutas a index.html para React Router
+# Permitir acceso a archivos estáticos
+RewriteRule ^(img/|favicon\.ico|main\.js|main\.js\.LICENSE\.txt)$ - [L]
+
+# Permitir acceso a archivos PHP específicos
+RewriteRule ^(guardar_confirmacion\.php|ver_confirmaciones\.php|editar_invitado\.php|eliminar_invitado\.php|websocket_server\.php|panel_password\.php)$ - [L]
+
+# Redirigir todo lo demás a index.html para React Router
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !\.php$
 RewriteRule . /index.html [L]
 
-# Configuración de headers para archivos estáticos
-<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
-    Header set Cache-Control "max-age=31536000, public"
+# Configuración MIME types
+AddType application/javascript .js
+AddType text/css .css
+AddType image/webp .webp
+
+# Headers para evitar caché durante desarrollo
+<FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+</FilesMatch>
+
+# Headers para archivos estáticos
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|webp)$">
+    Header set Cache-Control "public, max-age=3600"
 </FilesMatch>

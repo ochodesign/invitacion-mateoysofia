@@ -1,0 +1,53 @@
+ACTUALIZACIÓN SITIO WEB - JULIETA & ARIEL
+=====================================
+
+Fecha: 13 de agosto de 2025
+Versión: 1.2.0 - Pantalla de Bienvenida Romántica
+
+CAMBIOS PRINCIPALES:
+------------------
+
+✅ PANTALLA DE BIENVENIDA ROMÁNTICA
+   - Implementada animación de carta de amor elegante
+   - Duración: 2.6 segundos
+   - Tipografía Dancing Script cursive
+   - Color de fondo: #C97B63 (color rosa acento del sitio)
+   - Transición directa sin efectos visuales molestos
+   - Iconos de corazón y destellos románticos
+
+✅ TIPOGRAFÍA MEJORADA
+   - Hero principal actualizado con Dancing Script
+   - Consistencia visual en toda la invitación
+   - Fuente cursiva elegante para títulos románticos
+
+✅ OPTIMIZACIÓN DE PRODUCCIÓN
+   - Bundle optimizado: 313KB (main.js)
+   - Eliminación de código no utilizado
+   - Compresión y minificación aplicada
+
+✅ ELIMINACIÓN DE MODALES
+   - Removida funcionalidad de modal en galería
+   - Botón "Ver detalles" eliminado del panel Admin
+   - Navegación más fluida y directa
+
+ARCHIVOS ACTUALIZADOS:
+---------------------
+- main.js (313KB) - Bundle de producción optimizado
+- index.html - Con debug y cache busting
+- RomanticWelcome.jsx - Componente final optimizado
+
+INSTRUCCIONES PARA HOSTINGER:
+----------------------------
+1. Subir TODOS los archivos de la carpeta 'public' al directorio raíz del hosting
+2. Asegurar que main.js se suba correctamente (313KB)
+3. Verificar que index.html esté en la raíz
+4. La pantalla romántica aparecerá automáticamente al cargar el sitio
+
+RENDIMIENTO:
+-----------
+- Carga rápida: < 2 segundos en conexiones estándar
+- Responsive design mantenido
+- SEO optimizado con meta tags
+- Cache busting implementado
+
+¡La invitación romántica está lista para enamorar a todos los invitados! 💕
