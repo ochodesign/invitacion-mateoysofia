@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "../components/Modal";
+import CustomAlert from "../components/CustomAlert";
 import { Heart, Sparkles, Users, Calendar, MessageSquare, Music, Phone, RefreshCw, Search, Filter, UserCheck, UserX, Crown, Flower2, MapPin, Clock, Lock, Eye, EyeOff, Edit, Trash2, Save, X } from "lucide-react";
 
 const Admin = () => {
@@ -8,6 +9,33 @@ const Admin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [datos, setDatos] = useState([]);
+  
+  // Estados para el sistema de alertas personalizado
+  const [alert, setAlert] = useState({
+    isOpen: false,
+    type: 'success',
+    title: '',
+    message: '',
+    onConfirm: null,
+    confirmText: '',
+    cancelText: ''
+  });
+
+  const showAlert = (type, title, message, onConfirm = null, confirmText = '', cancelText = '') => {
+    setAlert({
+      isOpen: true,
+      type,
+      title,
+      message,
+      onConfirm,
+      confirmText,
+      cancelText
+    });
+  };
+
+  const closeAlert = () => {
+    setAlert(prev => ({ ...prev, isOpen: false }));
+  };
   const [cargando, setCargando] = useState(false);
   const [busqueda, setBusqueda] = useState("");
   const [filtroAsistencia, setFiltroAsistencia] = useState("Todos");
@@ -50,7 +78,7 @@ const Admin = () => {
     const fetchData = async () => {
       setCargando(true);
       try {
-          const response = await fetch("https://www.julietayariel.com/ver_confirmaciones.php");
+          const response = await fetch("ver_confirmaciones.php");
         const data = await response.json();
         console.log("Datos recibidos:", data); // Log para depuración
         setDatos(data);
@@ -211,7 +239,7 @@ const Admin = () => {
 
   const saveEdit = async () => {
     try {
-      const response = await fetch('https://www.julietayariel.com/editar_invitado.php', {
+      const response = await fetch('editar_invitado.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -234,7 +262,7 @@ const Admin = () => {
         // Recargar datos desde el servidor para asegurar sincronización
         const fetchData = async () => {
           try {
-            const response = await fetch('https://www.julietayariel.com/ver_confirmaciones.php');
+            const response = await fetch('ver_confirmaciones.php');
             const data = await response.json();
             setDatos(data);
           } catch (error) {
@@ -253,39 +281,60 @@ const Admin = () => {
 
   // Función para eliminar invitado
   const deleteInvitado = async (id, nombre) => {
-    if (window.confirm(`¿Estás seguro de que quieres eliminar a ${nombre}?\n\nEsta acción no se puede deshacer.`)) {
-      try {
-        const response = await fetch('https://www.julietayariel.com/eliminar_invitado.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id })
-        });
+    showAlert(
+      'confirm',
+      '🗑️ Eliminar Invitado',
+      `¿Estás seguro de que quieres eliminar a "${nombre}"?\n\n⚠️ Esta acción NO se puede deshacer.`,
+      async () => {
+        try {
+          console.log('Eliminando invitado ID:', id);
+          
+          const response = await fetch('eliminar_invitado.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id })
+          });
 
-        if (response.ok) {
-          // Remover de datos localmente
-          setDatos(datos.filter(inv => inv.id !== id));
-          alert('Invitado eliminado correctamente');
-          // Recargar datos desde el servidor para asegurar sincronización
-          const fetchData = async () => {
-            try {
-              const response = await fetch('https://www.julietayariel.com/ver_confirmaciones.php');
-              const data = await response.json();
-              setDatos(data);
-            } catch (error) {
-              console.error('Error al recargar datos:', error);
-            }
-          };
-          fetchData();
-        } else {
-          alert('Error al eliminar el invitado');
+          const result = await response.json();
+          console.log('Resultado eliminación:', result);
+
+          if (response.ok && result.success) {
+            // Mostrar mensaje de éxito
+            showAlert(
+              'success',
+              '✅ Eliminado Exitosamente',
+              result.message || `"${nombre}" ha sido eliminado correctamente.`
+            );
+            
+            // Recargar datos desde el servidor
+            const fetchData = async () => {
+              try {
+                const response = await fetch('ver_confirmaciones.php');
+                const data = await response.json();
+                setDatos(data);
+              } catch (error) {
+                console.error('Error al recargar datos:', error);
+              }
+            };
+            fetchData();
+          } else {
+            throw new Error(result.error || 'Error desconocido al eliminar');
+          }
+          
+        } catch (error) {
+          console.error('Error al eliminar:', error);
+          showAlert(
+            'error',
+            '❌ Error al Eliminar',
+            `${error.message}\n\nPor favor, intenta nuevamente.`
+          );
         }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Error al eliminar el invitado');
-      }
-    }
+      },
+      'Sí, eliminar',
+      'Cancelar'
+    );
   };
 
   // Si no está autenticado, mostrar pantalla de login
@@ -950,6 +999,18 @@ const Admin = () => {
           </div>
         </div>
       )}
+
+      {/* Custom Alert Component */}
+      <CustomAlert
+        isOpen={alert.isOpen}
+        type={alert.type}
+        title={alert.title}
+        message={alert.message}
+        onConfirm={alert.onConfirm}
+        onClose={closeAlert}
+        confirmText={alert.confirmText}
+        cancelText={alert.cancelText}
+      />
     </section>
   );
 };
