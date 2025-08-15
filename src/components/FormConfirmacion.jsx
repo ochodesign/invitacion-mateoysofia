@@ -69,20 +69,25 @@ const FormConfirmacion = () => {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      const text = await response.text();
+      const result = await response.json();
       
-      // Manejar respuesta de texto plano como antes
-      if (text.trim() === 'ok') {
+      // Manejar respuesta JSON
+      if (result.success) {
         setExito('¡Confirmación enviada exitosamente! ✨💕');
         setForm({ nombre: "", invitados: [], wsp: "", musica: "", mensaje: "", asistencia: "" });
         setNuevoInvitado("");
       } else {
-        setExito('Hubo un error al enviar la confirmación.');
+        setExito(`Error: ${result.error || 'Hubo un error al enviar la confirmación.'}`);
       }
 
     } catch (error) {
       console.error('Error al enviar formulario:', error);
-      setExito(`Error de conexión: ${error.message}`);
+      // Si hay error de JSON, intentar con texto plano como fallback
+      if (error.message.includes('JSON')) {
+        setExito('Confirmación enviada pero con formato de respuesta inesperado.');
+      } else {
+        setExito(`Error de conexión: ${error.message}`);
+      }
     }
     
     setEnviando(false);

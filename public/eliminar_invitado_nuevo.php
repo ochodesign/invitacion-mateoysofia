@@ -11,13 +11,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Configuración de la base de datos para www.julietayariel.com
+// Configuración de la base de datos
 require_once 'conexion.php';
 
 try {
-    // Usar la conexión ya creada en conexion.php
+    $conn = new mysqli($host, $user, $pass, $db);
     if ($conn->connect_error) {
-        throw new Exception('Error de conexión a la base de datos: ' . $conn->connect_error);
+        throw new Exception('Error de conexión a la base de datos');
     }
 
     // Recibir datos JSON

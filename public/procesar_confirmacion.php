@@ -3,10 +3,7 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Configuración de la base de datos
-    $host = 'localhost';
-    $user = 'u506439444_admin_jul';
-    $pass = 'ochodesign2024';
-    $db = 'u506439444_bd_juliyari';
+        require_once 'conexion.php';
     
     try {
         $conn = new mysqli($host, $user, $pass, $db);

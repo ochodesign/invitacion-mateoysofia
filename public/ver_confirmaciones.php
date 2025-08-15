@@ -12,16 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Configuración de la base de datos para www.julietayariel.com
-$host = 'localhost';
-$user = 'u506439444_admin_jul';
-$pass = 'ochodesign2024';
-$db = 'u506439444_bd_juliyari';
+require_once 'conexion.php';
 
-// Conexión a la base de datos
-$conn = new mysqli($host, $user, $pass, $db);
+// Usar la conexión ya creada en conexion.php
 if ($conn->connect_error) {
     http_response_code(500);
-    echo json_encode(['error' => 'Error de conexión']);
+    echo json_encode(['error' => 'Error de conexión: ' . $conn->connect_error]);
     exit;
 }
 

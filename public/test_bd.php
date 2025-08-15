@@ -5,10 +5,7 @@ header("Content-Type: application/json");
 
 echo json_encode(['timestamp' => date('Y-m-d H:i:s'), 'message' => 'Iniciando test...']) . "\n";
 
-$host = 'localhost';
-$user = 'u506439444_admin_jul';
-$pass = 'ochodesign2024';
-$db = 'u506439444_bd_juliyari';
+    require_once 'conexion.php';
 
 try {
     echo json_encode(['step' => 'Conectando a BD...']) . "\n";

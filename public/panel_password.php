@@ -1,12 +1,13 @@
 <?php
-// CONFIGURACIÓN
-$db_host = '127.0.0.1';
-$db_user = 'u506439444_bd_juliyari';
-$db_pass = 'Julieta8a';
-$db_name = 'u506439444_bd_juliyari';
+// CONFIGURACIÓN - Credenciales originales del admin
+$host = 'localhost';
+$user = 'u506439444_admin_jul';
+$pass = 'ochodesign2024';
+$db = 'u506439444_bd_juliyari';
+
 $table   = 'confirmaciones';
 $fields  = ['id', 'nombre', 'asistencia', 'invitados', 'wsp', 'musica', 'mensaje', 'fecha'];
-$panel_password_hash = password_hash('TuContraseñaSegura', PASSWORD_DEFAULT); // Cambia 'TuContraseñaSegura' por la contraseña real
+$panel_password_hash = password_hash('Julieta8a', PASSWORD_DEFAULT); // Contraseña: Julieta8a
 
 session_start();
 
@@ -50,10 +51,11 @@ exit;
 endif;
 
 // Consulta segura a la base de datos
-$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+$conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
     die('<div style="color:red">Error de conexión: ' . htmlspecialchars($conn->connect_error) . '</div>');
 }
+
 $sql = "SELECT " . implode(',', $fields) . " FROM `$table` ORDER BY fecha DESC";
 $result = $conn->query($sql);
 ?>
