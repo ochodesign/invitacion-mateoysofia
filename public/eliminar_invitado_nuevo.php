@@ -15,6 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once 'conexion.php';
 
 try {
+    $host = 'localhost';
+    $user = 'u506439444_mateoysofi';
+    $pass = 'Mateoysofi11';
+    $db = 'u506439444_bd_mateoysofi';
     $conn = new mysqli($host, $user, $pass, $db);
     if ($conn->connect_error) {
         throw new Exception('Error de conexión a la base de datos');

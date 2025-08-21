@@ -160,7 +160,7 @@ const FormConfirmacion = () => {
               onChange={handleChange} 
               required 
               className="w-full p-4 border-2 border-bgSection rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200 disabled:bg-bgSection/30 disabled:text-base/60" 
-              placeholder="Ej: Julieta González" 
+              placeholder="Ej: Sofía Martínez" 
               disabled={!form.asistencia} 
             />
           </div>

@@ -54,7 +54,7 @@ const Admin = () => {
   // Función de login
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === "Julieta8a") {
+  if (password === "Sofia8a") {
       setIsAuthenticated(true);
       sessionStorage.setItem('adminAuth', 'true');
       setLoginError("");
@@ -215,7 +215,7 @@ const Admin = () => {
   // Función para crear URL de WhatsApp con mensaje
   const createWhatsAppURL = (phoneNumber, name) => {
     const formattedNumber = formatWhatsAppNumber(phoneNumber);
-    const message = encodeURIComponent(`Hola ${name}! Te escribo desde el panel de administración de la boda de Julieta y Ariel 💕`);
+  const message = encodeURIComponent(`Hola ${name}! Te escribo desde el panel de administración de la boda de Sofía y Mateo 💕`);
     return `https://wa.me/${formattedNumber}?text=${message}`;
   };
 
@@ -360,7 +360,7 @@ const Admin = () => {
                 <Heart className="w-8 h-8 text-accent animate-pulse" style={{animationDelay: '1s'}} />
               </div>
               <h1 className="text-3xl font-dancing text-primary mb-2">Panel de Administración</h1>
-              <p className="text-gray-600 font-lora">Julieta & Ariel - 29.11.2025</p>
+              <p className="text-gray-600 font-lora">Sofía & Mateo - 15.11.2025</p>
               <div className="w-20 h-1 bg-gradient-to-r from-accent to-primary mx-auto mt-4 rounded-full"></div>
             </div>
 
@@ -441,7 +441,7 @@ const Admin = () => {
         </div>
         
         <h1 className="text-4xl md:text-6xl font-lora font-bold text-primary mb-4 drop-shadow-lg">
-          Julieta & Ariel
+          Sofía & Mateo
         </h1>
         <div className="flex items-center justify-center gap-3 mb-4">
           <Users className="w-6 h-6 text-accent" />
@@ -837,7 +837,7 @@ const Admin = () => {
         <div className="flex items-center justify-center gap-4 mb-4">
           <Heart className="w-5 h-5 text-accent animate-pulse" />
           <span className="text-primary font-lora text-lg font-semibold">
-            Julieta & Ariel - 29.11.2025
+            Sofía & Mateo - 15.11.2025
           </span>
           <Heart className="w-5 h-5 text-accent animate-pulse" style={{animationDelay: '1s'}} />
         </div>

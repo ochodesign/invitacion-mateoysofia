@@ -4,8 +4,32 @@ import { Heart, Sparkles, Calendar, ChevronDown, Flower2, Infinity } from "lucid
 const Hero = () => {
   return (
     <section
-      className="relative w-screen min-h-[90vh] flex flex-col justify-center items-center text-center bg-cover bg-center hero-bg-responsive overflow-hidden max-w-full"
+      className="relative w-screen min-h-[90vh] flex flex-col justify-center items-center text-center bg-cover bg-center hero-bg-responsive overflow-hidden max-w-full bg-bgSection"
     >
+  {/* Overlay gradiente más oscuro para mejor contraste del texto */}
+  <div className="absolute inset-0 bg-black/50"></div>
+      {/* Decoraciones flotantes y modernas */}
+      {/* ...decoraciones existentes... */}
+      {/* Contenido principal Hero */}
+      <div className="relative z-30 flex flex-col justify-center items-center w-full px-4 py-8">
+        {/* Fecha arriba del Hero */}
+        <div className="w-full flex justify-center mb-8">
+          <AnimatedHeroText tag="span" className="text-bordo font-semibold tracking-widest text-xl md:text-2xl bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-bordo/30 drop-shadow-lg" text="15.11.2025" />
+        </div>
+        {/* Nombres */}
+        <AnimatedHeroText className="text-bordo drop-shadow-2xl font-dancing text-7xl md:text-9xl lg:text-[8rem] z-10 relative pointer-events-auto mb-6" />
+        {/* Frase romántica */}
+        <AnimatedHeroText 
+          tag="p" 
+          className="text-white text-xl md:text-2xl font-lora italic w-full max-w-2xl mx-auto drop-shadow-lg px-4 text-center leading-relaxed z-10" 
+          text={
+            <>
+              <span className="block">Amar es una decisión</span>
+              <span className="block">y nosotros decidimos amarnos hoy y siempre.</span>
+            </>
+          } 
+        />
+      </div>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
         
@@ -50,7 +74,7 @@ const Hero = () => {
       `}</style>
       
       {/* Overlay gradiente mejorado - más oscuro para mejor contraste del texto */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
+    <div className="absolute inset-0 bg-bgSection/30 backdrop-blur-sm"></div>
       
       {/* Decoraciones flotantes para desktop */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -98,6 +122,13 @@ const Hero = () => {
           <Heart className="absolute bottom-20 left-2 w-4 h-4 text-white/50 animate-pulse" style={{animationDelay: '3s'}} />
         </div>
       </div>
+        {/* Decoraciones sutiles y modernas */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <Heart className="absolute top-10 left-10 w-8 h-8 text-accent/40 animate-pulse" />
+          <Sparkles className="absolute top-20 right-10 w-8 h-8 text-accent/30 animate-pulse" />
+          <Flower2 className="absolute bottom-10 left-16 w-10 h-10 text-accent/20 animate-pulse" />
+          <Heart className="absolute bottom-16 right-16 w-8 h-8 text-accent/30 animate-pulse" />
+        </div>
       
       <div className="relative z-10 flex flex-col items-center justify-center h-full py-16 w-full max-w-full px-4 sm:px-6">
         {/* Fecha con decoración romántica */}
@@ -107,9 +138,9 @@ const Hero = () => {
             <Flower2 className="w-5 h-5 text-accent/80 mx-2" />
           </div>
           
-          <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 sm:px-6 py-3 border border-white/20 flex-shrink-0">
+          <div className="flex items-center bg-primary/80 backdrop-blur-sm rounded-full px-4 sm:px-6 py-3 border border-primary flex-shrink-0">
             <Calendar className="w-5 h-5 text-accent mr-3" />
-            <AnimatedHeroText tag="span" className="text-white text-base sm:text-lg font-semibold tracking-widest" text="29.11.2025" />
+            {/* Fecha ya está arriba, se elimina aquí para evitar duplicado */}
             <Heart className="w-5 h-5 text-accent ml-3 animate-pulse" />
           </div>
           
@@ -118,30 +149,7 @@ const Hero = () => {
             <div className="flex-1 h-px bg-gradient-to-l from-transparent via-white/40 to-accent/60"></div>
           </div>
         </div>
-        
-        {/* Nombres con animación y decoración */}
-        <div className="relative mb-6">
-          {/* Decoración alrededor de los nombres */}
-          <div className="absolute -top-6 left-1/2 -translate-x-1/2">
-            <div className="flex items-center gap-4">
-              <Sparkles className="w-6 h-6 text-accent animate-pulse" style={{animationDelay: '0.5s'}} />
-              <Heart className="w-8 h-8 text-accent/80 animate-pulse" />
-              <Sparkles className="w-6 h-6 text-accent animate-pulse" style={{animationDelay: '1.5s'}} />
-            </div>
-          </div>
-          
-          <AnimatedHeroText />
-          
-          {/* Decoración debajo de los nombres */}
-          <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-px bg-gradient-to-r from-transparent via-accent to-transparent"></div>
-              <Infinity className="w-6 h-6 text-accent floating-hearts" />
-              <div className="w-12 h-px bg-gradient-to-l from-transparent via-accent to-transparent"></div>
-            </div>
-          </div>
-        </div>
-        
+          {/* Fecha destacada con borde plata y fondo translúcido */}
         {/* Frase de amor con decoración y padding mejorado */}
         <div className="relative w-full max-w-3xl mx-auto px-4">
           <div className="absolute -left-4 top-0 hidden md:block">
@@ -151,11 +159,7 @@ const Hero = () => {
             <Heart className="w-6 h-6 text-accent/60 animate-pulse" style={{animationDelay: '3s'}} />
           </div>
           
-          <AnimatedHeroText 
-            tag="p" 
-            className="text-white text-base sm:text-lg md:text-2xl font-lora font-light italic mt-6 mb-8 w-full max-w-2xl mx-auto drop-shadow-lg px-4 sm:px-6 md:px-8 text-center leading-relaxed" 
-            text={'"Amar es una decisión y nosotros decidimos amarnos hoy y siempre."'} 
-          />
+          {/* Frase de amor ya está arriba, se elimina duplicado para mejor UX */}
           
           {/* Pequeñas decoraciones móvil */}
           <div className="absolute top-0 left-0 md:hidden">
@@ -165,6 +169,8 @@ const Hero = () => {
             <Sparkles className="w-3 h-3 text-accent/60 animate-pulse" style={{animationDelay: '2s'}} />
           </div>
         </div>
+          {/* Frase de amor elegante y centrada */}
+          {/* Solo una instancia, ya está arriba */}
         
         {/* Flecha scroll mejorada con scroll suave */}
         <a 
@@ -218,7 +224,7 @@ function AnimatedHeroText({ tag = "h1", className = "", text = null }) {
         {/* Mobile: 3 líneas */}
         <h1
           className={
-            `block md:hidden text-4xl xs:text-5xl italic font-bold text-white mb-2 drop-shadow-lg flex flex-col items-center justify-center w-full max-w-full break-words ${baseClass}` +
+            `block md:hidden text-6xl xs:text-7xl italic font-bold text-white mb-2 drop-shadow-lg flex flex-col items-center justify-center w-full max-w-full break-words ${baseClass}` +
             (className ? ` ${className}` : "")
           }
           style={{ 
@@ -227,9 +233,9 @@ function AnimatedHeroText({ tag = "h1", className = "", text = null }) {
             lineHeight: "1.1" 
           }}
         >
-          <span className="block text-5xl xs:text-6xl">Julieta</span>
-          <span className="text-accent text-5xl xs:text-6xl font-serif my-1">&</span>
-          <span className="block text-5xl xs:text-6xl">Ariel</span>
+          <span className="block text-7xl xs:text-8xl text-white">Sofía</span>
+          <span className="text-primary text-7xl xs:text-8xl font-serif my-1">&</span>
+          <span className="block text-7xl xs:text-8xl text-white">Mateo</span>
         </h1>
         {/* Desktop: una sola línea */}
         <h1
@@ -243,9 +249,9 @@ function AnimatedHeroText({ tag = "h1", className = "", text = null }) {
             lineHeight: "1.1" 
           }}
         >
-          <span className="text-5xl lg:text-6xl">Julieta</span>
-          <span className="text-accent text-5xl lg:text-6xl font-serif mx-2">&</span>
-          <span className="text-5xl lg:text-6xl">Ariel</span>
+          <span className="text-8xl lg:text-9xl text-white">Mateo</span>
+          <span className="text-primary text-8xl lg:text-9xl font-serif mx-2">&</span>
+          <span className="text-8xl lg:text-9xl text-white">Sofía</span>
         </h1>
       </>
     );

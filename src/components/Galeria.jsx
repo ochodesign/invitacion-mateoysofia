@@ -9,8 +9,9 @@ const imagenes = [
 ];
 
 const Galeria = () => {
+  // ...existing code...
   return (
-    <section className="w-full py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-bgSection/50 via-white to-bgSection/30 flex flex-col items-center overflow-hidden">
+    <section className="w-full py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-bgSection via-contrast to-bgSection/60 flex flex-col items-center overflow-hidden">
       {/* Decoraciones flotantes */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <Heart className="absolute top-20 left-8 w-6 h-6 text-accent/30 animate-pulse hidden lg:block" />
@@ -29,7 +30,7 @@ const Galeria = () => {
           </div>
         </div>
         
-        <h2 className="text-3xl md:text-4xl font-lora font-bold text-primary mb-4">Sobre Nosotros</h2>
+  <h2 className="text-3xl md:text-4xl font-lora font-bold text-primary mb-4">Sobre Nosotros</h2>
         
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2">
           <div className="flex items-center gap-2">
@@ -62,7 +63,7 @@ const Galeria = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-xl transform scale-110"></div>
             <img 
               src="/img/galeria/sobrenosotros.webp" 
-              alt="Julieta y Ariel" 
+              alt="Sofía y Mateo" 
               className="relative w-48 h-48 sm:w-64 sm:h-64 rounded-full object-cover border-4 border-white shadow-2xl transition-transform duration-300 group-hover:scale-105" 
               style={{ objectPosition: '50% center' }}
             />
@@ -126,20 +127,20 @@ const Galeria = () => {
 
       {/* Grid de imágenes mejorado y centrado */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 max-w-6xl mx-auto">
-        {imagenes.map((img, i) => (
-          <div 
-            key={img} 
-            className="group relative overflow-hidden rounded-2xl border-2 border-primary/20 hover:border-accent transition-all duration-300" 
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
-            <Camera className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20" />
-            <img 
-              src={img} 
-              alt={`Galería ${i+1}`} 
-              className="w-full h-48 sm:h-64 lg:h-72 object-cover" 
-            />
-          </div>
-        ))}
+      {imagenes.map((img, i) => (
+        <div 
+          key={img} 
+          className="group relative overflow-hidden rounded-2xl border-2 border-primary/20 hover:border-accent transition-all duration-300"
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+          <Camera className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20" />
+          <img 
+            src={img} 
+            alt={`Galería ${i+1}`} 
+            className="w-full h-48 sm:h-64 lg:h-72 object-cover" 
+          />
+        </div>
+      ))}
       </div>
     </section>
   );

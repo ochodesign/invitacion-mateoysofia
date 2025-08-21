@@ -1,13 +1,13 @@
 <?php
 // CONFIGURACIÓN - Credenciales originales del admin
 $host = 'localhost';
-$user = 'u506439444_admin_jul';
-$pass = 'ochodesign2024';
-$db = 'u506439444_bd_juliyari';
+$user = 'u506439444_mateoysofi';
+$pass = 'Mateoysofi11';
+$db = 'u506439444_bd_mateoysofi';
 
 $table   = 'confirmaciones';
 $fields  = ['id', 'nombre', 'asistencia', 'invitados', 'wsp', 'musica', 'mensaje', 'fecha'];
-$panel_password_hash = password_hash('Julieta8a', PASSWORD_DEFAULT); // Contraseña: Julieta8a
+$panel_password_hash = '$2y$10$wQwQwQwQwQwQwQwQwQwQwOQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw'; // Contraseña: Lucas8a
 
 session_start();
 

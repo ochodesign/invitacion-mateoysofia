@@ -7,7 +7,7 @@ echo "<h2>Test de Conexión y Datos</h2>";
 
 // Probar con las credenciales unificadas
 $host = 'localhost';
-$user = 'u506439444_juliyari';
+$user = 'u506439444_mateoysofi';
 $pass = 'Julieta8a';
 $db = 'u506439444_bd_juliyari';
 

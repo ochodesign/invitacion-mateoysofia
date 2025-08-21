@@ -10,17 +10,20 @@ module.exports = {
       },
       colors: {
         primary: {
-          DEFAULT: '#272b00', // Verde oliva
+          DEFAULT: '#7B1F2B', // Bordó/Vino
+        },
+        bordo: {
+          DEFAULT: '#7B1F2B', // Alias para Bordó/Vino
         },
         bgSection: {
-          DEFAULT: '#bec092', // Fondo de sección
+          DEFAULT: '#F8E7C1', // Fondo dorado claro
         },
         accent: {
-          DEFAULT: '#C97B63', // Terracota, acompaña bien el verde oliva
+          DEFAULT: '#696565ff', // Gris plata
         },
         base: {
           DEFAULT: '#18181b', // Gris oscuro casi negro
-          light: '#f9fafb',   // Gris muy claro
+          light: '#fff8e1',   // Gris/dorado muy claro
         },
         contrast: {
           DEFAULT: '#fff',     // Blanco puro

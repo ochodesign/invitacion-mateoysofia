@@ -10,10 +10,10 @@ import Regalos from "./components/Regalos";
 import Footer from "./components/Footer";
 import BotonWhatsappFlotante from "./components/BotonWhatsappFlotante";
 import FadeInSection from "./components/FadeInSection";
-import RomanticWelcome from "./components/RomanticWelcome";
+import RomanticWelcome from "./components/RomanticWelcome_new";
 import Admin from "./pages/Admin";
 
-const EVENT_DATE = "2025-11-29T20:00:00";
+const EVENT_DATE = "2025-11-15T20:00:00";
 
 function MainPage() {
   const [showWelcome, setShowWelcome] = useState(true);
@@ -22,23 +22,24 @@ function MainPage() {
     setShowWelcome(false);
   };
 
-  if (showWelcome) {
-    return <RomanticWelcome onComplete={handleWelcomeComplete} />;
-  }
-
   return (
-    <main>
-      <Hero />
-      <div id="countdown" className="flex justify-center mb-12">
-        <Countdown targetDate={EVENT_DATE} />
-      </div>
-      <FadeInSection><Galeria /></FadeInSection>
-      <FadeInSection><InfoEvento /></FadeInSection>
-      <FadeInSection><FormConfirmacion /></FadeInSection>
-      <FadeInSection><Regalos /></FadeInSection>
-      <Footer />
-      <BotonWhatsappFlotante telefono="541131307799" mensaje="Hola Julieta, tengo algunas dudas sobre el sitio y me gustaría consultarte." />
-    </main>
+    <>
+      <main className="bg-transparent">
+        <Hero />
+        <div id="countdown" className="flex justify-center mb-12">
+          <Countdown targetDate={EVENT_DATE} />
+        </div>
+        <FadeInSection><Galeria /></FadeInSection>
+        <FadeInSection><InfoEvento /></FadeInSection>
+        <FadeInSection><FormConfirmacion /></FadeInSection>
+        <FadeInSection><Regalos /></FadeInSection>
+        <Footer />
+  <BotonWhatsappFlotante telefono="541164623427" mensaje="Hola Sofía, tengo algunas dudas sobre el sitio y me gustaría consultarte." />
+      </main>
+      {showWelcome && (
+        <RomanticWelcome onComplete={handleWelcomeComplete} />
+      )}
+    </>
   );
 }
 

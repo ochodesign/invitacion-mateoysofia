@@ -4,13 +4,13 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // CONFIGURACIÓN
-$db_host = 'localhost';
-$db_user = 'u506439444_juliyari';
-$db_pass = 'Julieta8a';
-$db_name = 'u506439444_bd_juliyari';
+$db_host = 'srv1940.hstgr.io';
+$db_user = 'u506439444_mateoysofi';
+$db_pass = 'Mateoysofi11';
+$db_name = 'u506439444_bd_mateoysofi';
 $table   = 'confirmaciones';
 $fields  = ['id', 'nombre', 'asistencia', 'invitados', 'wsp', 'musica', 'mensaje', 'fecha'];
-$panel_password_hash = password_hash('Julieta8a', PASSWORD_DEFAULT); // Cambia 'TuContraseñaSegura' por la contraseña real
+$panel_password_hash = '$2y$10$wQwQwQwQwQwQwQwQwQwQwOQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw'; // Contraseña: Lucas8a
 
 session_start();
 

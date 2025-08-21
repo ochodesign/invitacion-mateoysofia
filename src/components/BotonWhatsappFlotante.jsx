@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 
-const BotonWhatsappFlotante = ({ telefono = "541131307799", mensaje = "Hola Julieta, tengo algunas dudas sobre el sitio y me gustaría consultarte." }) => {
+const BotonWhatsappFlotante = ({ telefono = "541164623427", mensaje = "Hola Sofía, tengo algunas dudas sobre el sitio y me gustaría consultarte." }) => {
   const [visible, setVisible] = useState(false);
   const [showMsg, setShowMsg] = useState(true);
   useEffect(() => {
@@ -27,15 +27,15 @@ const BotonWhatsappFlotante = ({ telefono = "541131307799", mensaje = "Hola Juli
     >
       {/* Mensaje flotante */}
       {showMsg && (
-        <div className="mb-2 bg-[#222] text-white font-lora text-sm px-4 py-2 rounded-lg shadow-lg border border-[#bfa16a] animate-fadein" style={{maxWidth:240, letterSpacing:'.01em'}}>
-          ¿Tienes dudas sobre el sitio? <span className="font-semibold">¡Escribile a Julieta por WhatsApp!</span>
+  <div className="mb-2 bg-bgSection text-primary font-lora text-sm px-4 py-2 rounded-lg shadow-lg border border-accent animate-fadein" style={{maxWidth:240, letterSpacing:'.01em'}}>
+          ¿Tienes dudas sobre el sitio? <span className="font-semibold">¡Escribile a la Pareja por WhatsApp!</span>
         </div>
       )}
       <a
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-colors"
+  className="bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-colors"
         aria-label="WhatsApp"
       >
         <FaWhatsapp size={28} />

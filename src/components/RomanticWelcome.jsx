@@ -43,13 +43,13 @@ const RomanticWelcome = ({ onComplete }) => {
         <div className="opacity-100">
           <h1 className="text-6xl md:text-8xl italic text-white mb-4 tracking-wider" style={{ fontFamily: 'Dancing Script, Brush Script MT, cursive' }}>
             <span className="inline-block">
-              Ariel
+              Mateo
             </span>
             <span className="inline-block mx-6">
               <Heart className="w-12 h-12 md:w-16 md:h-16 text-white fill-current animate-pulse" />
             </span>
             <span className="inline-block">
-              Julieta
+              Sofía
             </span>
           </h1>
         </div>

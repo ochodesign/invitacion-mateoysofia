@@ -9,7 +9,7 @@ session_start();
 
 // Autenticación simple
 if (!isset($_SESSION['admin_logged'])) {
-    if (isset($_POST['password']) && $_POST['password'] === 'admin123') {
+    if (isset($_POST['password']) && $_POST['password'] === 'Lucas8a') {
         $_SESSION['admin_logged'] = true;
     } else {
         ?>
@@ -30,6 +30,10 @@ if (!isset($_SESSION['admin_logged'])) {
 }
 
 // Conexión a BD
+$host = 'localhost';
+$user = 'u506439444_mateoysofi';
+$pass = 'Mateoysofi11';
+$db = 'u506439444_bd_mateoysofi';
 $conn = new mysqli($host, $user, $pass, $db);
 if ($conn->connect_error) {
     die('Error: ' . $conn->connect_error);

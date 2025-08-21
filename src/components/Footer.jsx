@@ -3,7 +3,7 @@ import { Heart, Sparkles, Calendar, MapPin, Phone, Mail, ExternalLink } from "lu
 
 const Footer = () => {
   return (
-    <footer className="w-full py-12 bg-primary text-white flex flex-col items-center font-lora text-base overflow-x-hidden px-4">
+  <footer className="w-full py-12 bg-primary flex flex-col items-center font-lora text-base overflow-x-hidden px-4">
       {/* Decoración superior */}
       <div className="flex items-center justify-center mb-6">
         <div className="h-px bg-gradient-to-r from-transparent via-accent to-transparent w-20"></div>
@@ -16,45 +16,45 @@ const Footer = () => {
       </div>
 
       {/* Nombres de los novios */}
-      <div className="text-3xl font-bold tracking-wide mb-3 font-dancing italic text-accent flex items-center">
-        <Heart className="w-6 h-6 text-accent mr-3 opacity-70" />
-        Julieta & Ariel
-        <Heart className="w-6 h-6 text-accent ml-3 opacity-70" />
+  <div className="text-3xl font-bold tracking-wide mb-3 font-dancing italic text-gray-300 flex items-center">
+  <Heart className="w-6 h-6 text-accent mr-3 opacity-70" />
+  Sofía & Mateo
+  <Heart className="w-6 h-6 text-accent ml-3 opacity-70" />
       </div>
 
       {/* Frase romántica */}
-      <div className="italic text-lg text-accent max-w-2xl text-center mb-6 px-2 leading-relaxed" style={{fontFamily:'Lora,serif', textShadow:'0 1px 4px rgba(0,0,0,0.18)'}}>
+  <div className="italic text-lg text-gray-400 max-w-2xl text-center mb-6 px-2 leading-relaxed" style={{fontFamily:'Lora,serif', textShadow:'0 1px 4px rgba(0,0,0,0.18)'}}>
         "El amor es la certeza de que, pase lo que pase, siempre elegiremos caminar juntos."
       </div>
 
       {/* Información de contacto y fecha */}
       <div className="flex flex-wrap justify-center gap-6 mb-8 text-sm">
-        <div className="flex items-center text-white/90 hover:text-accent transition-colors">
+        <div className="flex items-center text-gray-300 hover:text-accent transition-colors">
           <Calendar className="w-4 h-4 mr-2" />
           <span>Noviembre 2025</span>
         </div>
-        <div className="flex items-center text-white/90 hover:text-accent transition-colors">
+        <div className="flex items-center text-gray-300 hover:text-accent transition-colors">
           <MapPin className="w-4 h-4 mr-2" />
           <span>Buenos Aires</span>
         </div>
-        <div className="flex items-center text-white/90 hover:text-accent transition-colors">
+        <div className="flex items-center text-gray-300 hover:text-accent transition-colors">
           <Phone className="w-4 h-4 mr-2" />
-          <span>+54 9 11 3130-7799</span>
+          <span>+54 9 11 6462-3427</span>
         </div>
       </div>
 
       {/* Separador decorativo */}
-      <div className="w-full max-w-md h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mb-6"></div>
+  <div className="w-full max-w-md h-px bg-gradient-to-r from-transparent via-gray-400 to-transparent mb-6"></div>
 
       {/* Copyright */}
-      <div className="flex items-center text-white/80 text-sm mb-2">
+  <div className="flex items-center text-gray-400 text-sm mb-2">
         <Heart className="w-4 h-4 mr-2 text-accent" />
         <span>© {new Date().getFullYear()} Nuestra Boda</span>
         <Heart className="w-4 h-4 ml-2 text-accent" />
       </div>
 
       {/* Créditos de diseño */}
-      <div className="text-xs text-white/70 flex items-center">
+  <div className="text-xs text-gray-400 flex items-center">
         <span>Diseñado con</span>
         <Heart className="w-3 h-3 mx-1 text-accent animate-pulse" />
         <span>por</span>
