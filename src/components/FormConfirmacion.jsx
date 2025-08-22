@@ -60,7 +60,7 @@ const FormConfirmacion = () => {
 
     try {
       // Usar URL relativa como funcionaba antes
-      const response = await fetch('guardar_confirmacion.php', {
+  const response = await fetch('https://lightblue-bat-128924.hostingersite.com/inv-casamiento-julieta/public/guardar_confirmacion.php', {
         method: 'POST',
         body: formData
       });

@@ -54,7 +54,7 @@ const Admin = () => {
   // Función de login
   const handleLogin = (e) => {
     e.preventDefault();
-  if (password === "Sofia8a") {
+  if (password === "Lucas8a") {
       setIsAuthenticated(true);
       sessionStorage.setItem('adminAuth', 'true');
       setLoginError("");

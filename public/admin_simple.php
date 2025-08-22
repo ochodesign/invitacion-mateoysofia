@@ -9,15 +9,24 @@ session_start();
 
 // Autenticación simple
 if (!isset($_SESSION['admin_logged'])) {
-    if (isset($_POST['password']) && $_POST['password'] === 'Lucas8a') {
-        $_SESSION['admin_logged'] = true;
-    } else {
+    $error = '';
+    // Hash de la contraseña (Lucas8a) igual que en panel_password.php
+    $panel_password_hash = '$2y$10$QwQwQwQwQwQwQwQwQwQwQeQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQwQw';
+    if (isset($_POST['password'])) {
+        if (password_verify($_POST['password'], $panel_password_hash)) {
+            $_SESSION['admin_logged'] = true;
+        } else {
+            $error = 'Contraseña incorrecta.';
+        }
+    }
+    if (!isset($_SESSION['admin_logged'])) {
         ?>
         <!DOCTYPE html>
         <html>
         <head><title>Admin</title></head>
         <body>
             <h2>Acceso Admin</h2>
+            <?php if ($error) { echo '<p style="color:red;">'.$error.'</p>'; } ?>
             <form method="post">
                 <input type="password" name="password" placeholder="Contraseña" required>
                 <button type="submit">Entrar</button>

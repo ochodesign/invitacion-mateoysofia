@@ -1,9 +1,8 @@
 <?php
-// Archivo único de conexión para todos los scripts
 
-$host = 'srv1940.hstgr.io';
+$host = 'localhost';
 $user = 'u506439444_mateoysofi';
-$pass = 'Mateoysofi11';
+$pass = 'Armani11!';
 $db = 'u506439444_bd_mateoysofi';
 
 $conn = new mysqli($host, $user, $pass, $db);

@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+ob_start();
 // Headers para JSON
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -50,4 +53,5 @@ if ($stmt->execute()) {
 
 $stmt->close();
 $conn->close();
+ob_end_clean();
 ?>
